@@ -40,15 +40,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
-#  Wire up the proxy
-  def local_ip
-    `hostname -I | cut -f1 -d' '`.strip
-  end
-  if Vagrant.has_plugin?("vagrant-proxyconf")
-    config.proxy.http     = "http://#{local_ip}:8123/"
-    config.proxy.https    = "http://#{local_ip}:8123/"
-    config.proxy.no_proxy = "localhost,127.0.0.1"
-  end
   config.vm.provision :ansible do |ansible|
     ansible.playbook = "deployment/ansible/site.yml"
     # Note: If running vagrant < 1.3.0 you may need to change this to ansible.inventory_file
