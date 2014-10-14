@@ -43,3 +43,6 @@ nosetests.xml
 
 # ignore logs
 *.log
+
+# Ansible roles
+deployment/ansible/roles/azavea.*

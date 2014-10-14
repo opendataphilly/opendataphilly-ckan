@@ -1,0 +1,18 @@
+---
+galaxy_info:
+  author: Derek Dohler
+  description: Ansible role for installing virtualenv
+  company: Azavea Inc.
+  license: Apache
+  min_ansible_version: 1.4
+  platforms:
+  - name: Ubuntu
+    versions:
+    - precise
+    - trusty
+  categories:
+  - development
+  - packaging
+dependencies:
+  - { role: "azavea.python", python_development: True }
+  - { role: "azavea.pip" }

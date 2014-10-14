@@ -1,2 +1,6 @@
 [vagrant]
 192.168.8.25    ansible_ssh_user=vagrant
+
+[vagrant:vars]
+python_version=2.7.3-0ubuntu2.2
+pip_version=1.0-1build1

@@ -2,4 +2,5 @@
 - hosts: vagrant
   sudo: True
   roles:
-    - { role: ckan }
+    - { role: "ckan" }
+    - { role: "ckanext-archiver" }
