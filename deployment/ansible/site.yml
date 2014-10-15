@@ -4,3 +4,4 @@
   roles:
     - { role: "ckan" }
     - { role: "ckanext-archiver" }
+    - { role: "ckanext-qa" }

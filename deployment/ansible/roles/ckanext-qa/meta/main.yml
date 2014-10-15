@@ -1,0 +1,5 @@
+---
+dependencies:
+  - { role: "ckan" }
+  - { role: "virtualenv" }
+  - { role: "ckanext-archiver" }

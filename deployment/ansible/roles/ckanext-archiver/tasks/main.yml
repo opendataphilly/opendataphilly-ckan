@@ -5,17 +5,15 @@
     - libxml2-dev
     - libxslt1-dev
 
-  # "force" uploads if the contents are different; default is only upload if dest doesn't exist.
 - name: Upload requirements.txt
-  copy: src=requirements.txt dest="{{ archiver_requirements_path }}" force=yes
+  copy: src=requirements.txt dest="{{ archiver_requirements_path }}"
 
 - name: Install Python requirements
   pip: requirements="{{ archiver_requirements_path }}" virtualenv="{{ ckan_virtualenv_path }}"
 
+# Using the ansible pip module here results in breakage
 - name: Install ckanext-archiver into ckan virtualenv
-  pip:
-    name: "git+http://github.com/okfn/ckanext-archiver.git@{{ ckanext_archiver_version }}#egg=ckanext-archiver"
-    virtualenv: "{{ ckan_virtualenv_path }}"
+  command: "{{ ckan_virtualenv_path }}/bin/pip install -e git+https://github.com/ckan/ckanext-archiver.git@{{ ckanext_archiver_version }}#egg=ckanext_archiver"
 
 - name: Clean up requirements.txt
   file: dest="{{ archiver_requirements_path }}" state=absent
