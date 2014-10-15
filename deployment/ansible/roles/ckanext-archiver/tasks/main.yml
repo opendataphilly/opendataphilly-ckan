@@ -15,5 +15,8 @@
 - name: Install ckanext-archiver into ckan virtualenv
   command: "{{ ckan_virtualenv_path }}/bin/pip install -e git+https://github.com/ckan/ckanext-archiver.git@{{ ckanext_archiver_version }}#egg=ckanext_archiver"
 
+- name: Add self to CKAN plugin list
+  lineinfile: dest="{{ ckan_config_path }}" regexp="^ckan.plugins(((?!archiver).)*)$" line="ckan.plugins\1 archiver" backrefs=yes
+
 - name: Clean up requirements.txt
   file: dest="{{ archiver_requirements_path }}" state=absent

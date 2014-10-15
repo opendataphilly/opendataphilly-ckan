@@ -6,3 +6,4 @@ ckan_virtualenv_path: "/usr/lib/ckan/default/"
 # requirements.txt from the new version.
 ckanext_archiver_version: "de57522441bae34984f8f15186d1cd95481e0acf"
 archiver_requirements_path: "/tmp/ckanext-archiver-requirements.txt"
+ckan_config_path: "/etc/ckan/default/production.ini"
