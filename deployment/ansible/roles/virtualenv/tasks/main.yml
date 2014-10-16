@@ -1,3 +1,0 @@
----
-- name: Install virtualenv
-  pip: name=virtualenv version="{{ virtualenv_version }}" state=present

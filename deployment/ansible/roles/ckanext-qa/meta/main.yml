@@ -1,5 +1,5 @@
 ---
 dependencies:
   - { role: "ckan" }
-  - { role: "virtualenv" }
+  - { role: "azavea.virtualenv" }
   - { role: "ckanext-archiver" }

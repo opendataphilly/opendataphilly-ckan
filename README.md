@@ -14,6 +14,5 @@ Development Installation
 ---------------
 
 1. Make sure you have the development dependencies installed
-2. From the project directory, run `ansible-galaxy install -r deployment/ansible/roles.txt -p
-   deployment/ansible/roles`
+2. From the project directory, run `ansible-galaxy install -r deployment/ansible/roles.txt -p deployment/ansible/roles`
 3. Run `vagrant up`; CKAN will be available at on port 8025.
