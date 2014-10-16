@@ -1,0 +1,22 @@
+---
+- name: Install build requirements
+  apt: name={{ item }} state=present
+  with_items:
+    - libxml2-dev
+    - libxslt1-dev
+
+- name: Upload requirements.txt
+  copy: src=requirements.txt dest="{{ archiver_requirements_path }}"
+
+- name: Install Python requirements
+  pip: requirements="{{ archiver_requirements_path }}" virtualenv="{{ ckan_virtualenv_path }}"
+
+# Using the ansible pip module here results in breakage
+- name: Install ckanext-archiver into ckan virtualenv
+  command: "{{ ckan_virtualenv_path }}/bin/pip install -e git+https://github.com/ckan/ckanext-archiver.git@{{ ckanext_archiver_version }}#egg=ckanext_archiver"
+
+- name: Add self to CKAN plugin list
+  lineinfile: dest="{{ ckan_config_path }}" regexp="^ckan.plugins(((?!archiver).)*)$" line="ckan.plugins\1 archiver" backrefs=yes
+
+- name: Clean up requirements.txt
+  file: dest="{{ archiver_requirements_path }}" state=absent

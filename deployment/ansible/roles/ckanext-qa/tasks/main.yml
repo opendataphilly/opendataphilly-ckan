@@ -1,0 +1,16 @@
+---
+- name: Upload requirements.txt
+  copy: src=requirements.txt dest="{{ qa_requirements_path }}"
+
+- name: Install Python requirements
+  pip: requirements="{{ qa_requirements_path }}" virtualenv="{{ ckan_virtualenv_path }}"
+
+# Using the ansible pip module here results in breakage
+- name: Install ckanext-qa into ckan virtualenv
+  command: "{{ ckan_virtualenv_path }}/bin/pip install -e git+https://github.com/ckan/ckanext-qa.git@{{ ckanext_qa_version }}#egg=ckanext_qa"
+
+- name: Add self to CKAN plugin list
+  lineinfile: dest="{{ ckan_config_path }}" regexp="^ckan.plugins(((?!qa).)*)$" line="ckan.plugins\1 qa" backrefs=yes
+
+- name: Clean up requirements.txt
+  file: dest="{{ qa_requirements_path }}" state=absent

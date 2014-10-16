@@ -1,0 +1,6 @@
+---
+ckan_virtualenv_path: "/usr/lib/ckan/default/"
+# If the version changes, make sure to update requirements.txt, too.
+ckanext_qa_version: 27023d2bd98689c02cb4d1618d69cf401eb45349
+qa_requirements_path: "/tmp/ckanext-qa-requirements.txt"
+ckan_config_path: "/etc/ckan/default/production.ini"
