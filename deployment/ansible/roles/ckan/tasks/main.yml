@@ -149,3 +149,40 @@
     # This is now the preferred syntax but unsupported in Ansible 1.4
     #acl: name=/var/lib/ckan/default entity=www-data etype=user permissions=u+rwx
     notify: Restart Apache
+
+  # Configuration
+  - name: Ensure anonymous users can't create datasets
+    lineinfile: 'dest=/etc/ckan/default/production.ini regexp="(ckan\.auth\.anon_create_dataset)" line="\1 = false" backrefs=yes'
+    notify: Restart Apache
+
+  - name: Ensure users can't create unowned datasets
+    lineinfile: 'dest=/etc/ckan/default/production.ini regexp="(ckan\.auth\.create_unowned_dataset)" line="\1 = false" backrefs=yes'
+    notify: Restart Apache
+
+  - name: Ensure users can't create datasets in orgs they are not a member of
+    lineinfile: 'dest=/etc/ckan/default/production.ini regexp="(ckan\.auth\.create_dataset_if_not_in_organization)" line="\1 = false" backrefs=yes'
+    notify: Restart Apache
+
+  - name: Ensure users can't create groups
+    lineinfile: 'dest=/etc/ckan/default/production.ini regexp="(ckan\.auth\.user_create_groups)" line="\1 = false" backrefs=yes'
+    notify: Restart Apache
+
+  - name: Ensure users can't create organizations
+    lineinfile: 'dest=/etc/ckan/default/production.ini regexp="(ckan\.auth\.user_create_organizations)" line="\1 = false" backrefs=yes'
+    notify: Restart Apache
+
+  - name: Ensure users can't delete groups
+    lineinfile: 'dest=/etc/ckan/default/production.ini regexp="(ckan\.auth\.user_delete_groups)" line="\1 = false" backrefs=yes'
+    notify: Restart Apache
+
+  - name: Ensure users can't delete organizations
+    lineinfile: 'dest=/etc/ckan/default/production.ini regexp="(ckan\.auth\.user_delete_organizations)" line="\1 = false" backrefs=yes'
+    notify: Restart Apache
+
+  - name: Ensure users can't be created via api
+    lineinfile: 'dest=/etc/ckan/default/production.ini regexp="(ckan\.auth\.create_user_via_api)" line="\1 = false" backrefs=yes'
+    notify: Restart Apache
+
+  - name: Ensure users can create themselves via web
+    lineinfile: 'dest=/etc/ckan/default/production.ini regexp="(ckan\.auth\.create_user_via_web)" line="\1 = true" backrefs=yes'
+    notify: Restart Apache
