@@ -1,8 +1,6 @@
 ---
 - hosts: vagrant
   sudo: True
-  vars:
-      ckan_disqus_shortname: ENTER_SHORTNAME_HERE
   roles:
     - { role: "ckan" }
     - { role: "ckanext-archiver" }
