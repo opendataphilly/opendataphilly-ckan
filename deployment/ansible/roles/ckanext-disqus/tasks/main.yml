@@ -1,0 +1,12 @@
+---
+# Using the ansible pip module here results in breakage
+- name: Install ckanext-disqus into ckan virtualenv
+  command: "{{ ckan_virtualenv_path }}/bin/pip install -e git+https://github.com/ckan/ckanext-disqus.git@{{ ckanext_disqus_version }}#egg=ckanext-disqus"
+
+- name: Add self to CKAN plugin list
+  lineinfile: dest="{{ ckan_config_path }}" regexp="^ckan.plugins(((?!disqus).)*)$" line="ckan.plugins\1 disqus" backrefs=yes
+  notify: Restart Apache
+
+- name: Add disqus.name to config
+  lineinfile: dest="{{ ckan_config_path }}" regexp="disqus\.name" line="disqus.name = {{ ckan_disqus_shortname }}" insertafter="ckan\.plugins"
+  notify: Restart Apache
