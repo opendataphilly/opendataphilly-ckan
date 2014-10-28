@@ -6,3 +6,4 @@
     - { role: "ckanext-archiver" }
     - { role: "ckanext-qa" }
     - { role: "odp-importer" }
+    - { role: "ckan-odp-configuration" }
