@@ -6,3 +6,5 @@
       version: 2.4.3
     - name: ckanapi
       version: 3.3
+    - name: python-slugify
+      version: 0.1.0
