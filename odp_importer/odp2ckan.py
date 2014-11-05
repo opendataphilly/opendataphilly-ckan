@@ -13,6 +13,8 @@ ch = logging.StreamHandler(sys.stdout)
 ch.setLevel(logging.DEBUG)
 logger.addHandler(ch)
 
+ODP_ROOT = 'http://opendataphilly.org'
+
 
 def check_endpoints(ckan_api):
     """Verify that the CKAN API endpoint exists and the API key is valid for it."""
@@ -22,33 +24,40 @@ def check_endpoints(ckan_api):
 
 def import_resources(ckan_api):
     """Get all data sets from Open Data Philly and try to insert them into CKAN."""
-    resources = opendataphilly.get_resources()
+    importer = opendataphilly.ODPToCKANImporter(ckan_api, ODP_ROOT)
+    resources = importer.get_resources()
     logger.debug('Retrieved %d resources from Open Data Philly' % len(resources))
     for resource in resources:
-        detail = opendataphilly.get_resource_detail(resource['url'])
-        opendataphilly.migrate_to_ckan(detail, ckan_api)
+        detail = importer.get_resource_detail(resource['url'])
+        importer.migrate_to_ckan(detail)
 
     logger.info('Successfully imported all datasets.')
 
 
 def clear_resources(ckan_api):
-    """Get all data sets from Open Data Philly and delete the corresponding packages from CKAN."""
-    resources = opendataphilly.get_resources()
+    """Attempt to delete as much as possible from the target CKAN instance."""
+    resources = ckan_api.action.package_list()
     for resource in resources:
-        try:
-            ckan_api.action.package_delete(id=opendataphilly.ckan_slugify(resource['name']))
-        except ckanapi.errors.NotFound:
-            pass
-    logger.warn('Successfully deleted all datasets.\nHowever, you will need to '
+        ckan_api.action.package_delete(id=resource)
+
+    organizations = ckan_api.action.organization_list()
+    for org in organizations:
+        ckan_api.action.organization_purge(id=org)
+
+    groups = ckan_api.action.group_list()
+    for group in groups:
+        ckan_api.action.group_purge(id=group)
+
+    logger.warn('Successfully cleared CKAN instance.\nHowever, you will need to '
                 'navigate to http://your-ckan-instance/ckan-admin/trash/ and manually '
-                'purge the datasets before creating new datasets with the same names.')
+                'purge the old datasets before creating new datasets with the same names.')
 
 
 def main():
     parser = argparse.ArgumentParser(description='Load datasets from OpenDataPhilly to CKAN')
     parser.add_argument('--api-key', required=True, help='CKAN API Key')
     parser.add_argument('--ckan-root', required=True, help='Root URI of CKAN Instance')
-    parser.add_argument('--erase', help='For each ODP resource, mark corresponding CKAN package "deleted"',
+    parser.add_argument('--erase', help='Clear all data from target CKAN instance',
                         action='store_true')
     args = parser.parse_args()
     ckan = ckanapi.RemoteCKAN(args.ckan_root, apikey=args.api_key)
