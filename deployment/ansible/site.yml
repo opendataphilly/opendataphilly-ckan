@@ -6,5 +6,6 @@
     - { role: "ckanext-archiver" }
     - { role: "ckanext-qa" }
     - { role: "ckanext-disqus" }
+    - { role: "ckanext-issues" }
     - { role: "odp-importer" }
     - { role: "ckan-odp-configuration" }
