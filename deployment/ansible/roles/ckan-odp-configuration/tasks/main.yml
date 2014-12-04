@@ -35,3 +35,31 @@
   - name: Ensure users can create themselves via web
     lineinfile: 'dest=/etc/ckan/default/production.ini regexp="(ckan\.auth\.create_user_via_web)" line="\1 = true" backrefs=yes'
     notify: Restart Apache
+
+  - name: Set config options
+    lineinfile: dest="{{ ckan_config_path }}" regexp="(^|\#){{ item.option }}" line="{{ item.option }} = {{ item.value }}" backrefs=yes
+    with_items:
+      - { option: 'ckan.site_url', value: 'http://localhost:8080/' }
+      - { option: 'ckan.datapusher.formats', value: 'csv xls' }
+      - { option: 'ckan.datapusher.url', value: 'http://127.0.0.1:8800' }
+    notify: Restart Apache
+
+  - name: Add plugins to ckan.plugins
+    lineinfile: dest="{{ ckan_config_path }}" regexp="^ckan.plugins(((?!{{ item }}).)*)$" line="ckan.plugins\1 {{ item }}" backrefs=yes
+    with_items:
+      - datastore
+      - datapusher
+      - resource_proxy
+      - recline_preview
+      - pdf_preview
+      - text_preview
+    notify: Restart Apache
+
+  - name: Add filetypes to ckan.preview.loadable
+    lineinfile: dest="{{ ckan_config_path }}" regexp="^ckan.preview.loadable(((?!{{ item }}).)*)$" line="ckan.preview.loadable\1 {{ item }}" backrefs=yes
+    notify: Restart Apache
+    with_items:
+      - pdf
+      - json
+      - csv
+      - xls
