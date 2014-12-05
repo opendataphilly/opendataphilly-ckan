@@ -1,0 +1,6 @@
+---
+ckan_smtp_mail_from: "opendataphilly@opendataphilly.org"
+ckan_smtp_user: ""
+ckan_smtp_server: ""
+ckan_smtp_starttls: "False"
+ckan_smtp_password: ""
