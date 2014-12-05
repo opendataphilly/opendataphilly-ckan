@@ -1,0 +1,12 @@
+---
+# Using the ansible pip module here results in breakage
+- name: Install ckanext-deadoralive into ckan virtualenv
+  command: "{{ ckan_virtualenv_path }}/bin/pip install -e git+https://github.com/ckan/ckanext-deadoralive.git@{{ ckanext_deadoralive_version }}#egg=ckanext-deadoralive"
+
+- name: Add self to CKAN plugin list
+  lineinfile: dest="{{ ckan_config_path }}" regexp="^ckan.plugins(((?!deadoralive).)*)$" line="ckan.plugins\1 deadoralive" backrefs=yes
+  notify: Restart Apache
+
+- name: Add ckanext.deadoralive.authorized_users to config
+  lineinfile: dest="{{ ckan_config_path }}" regexp="ckanext\.deadoralive\.authorized_users" line="ckanext\.deadoralive\.authorized_users = deadoralive" insertafter="ckan\.plugins"
+  notify: Restart Apache
