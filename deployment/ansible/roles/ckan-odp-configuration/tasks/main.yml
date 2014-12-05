@@ -42,6 +42,12 @@
       - { option: 'ckan.site_url', value: 'http://localhost:8080/' }
       - { option: 'ckan.datapusher.formats', value: 'csv xls' }
       - { option: 'ckan.datapusher.url', value: 'http://127.0.0.1:8800' }
+      - { option: 'ckan.activity_streams_email_notifications', value: 'true'}
+      - { option: 'smtp.mail_from', value: "{{ ckan_smtp_mail_from }}" }
+      - { option: 'smtp.user', value: "{{ ckan_smtp_user }}" }
+      - { option: 'smtp.server', value: "{{ ckan_smtp_server }}" }
+      - { option: 'smtp.starttls', value: "{{ ckan_smtp_starttls }}" }
+      - { option: 'smtp.password', value: "{{ ckan_smtp_password }}" }
     notify: Restart Apache
 
   - name: Add plugins to ckan.plugins
@@ -63,3 +69,8 @@
       - json
       - csv
       - xls
+
+  - name: Add email sending crontab
+    cron: job="echo '{}' | /usr/lib/ckan/default/bin/paster --plugin=ckan post -c {{ ckan_config_path }} /api/action/send_email_notifications > /dev/null"
+          name="Send Email Notifications"
+          special_time=hourly
