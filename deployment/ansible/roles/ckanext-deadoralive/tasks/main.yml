@@ -8,5 +8,5 @@
   notify: Restart Apache
 
 - name: Add ckanext.deadoralive.authorized_users to config
-  lineinfile: dest="{{ ckan_config_path }}" regexp="ckanext\.deadoralive\.authorized_users" line="ckanext\.deadoralive\.authorized_users = deadoralive" insertafter="ckan\.plugins"
+  lineinfile: dest="{{ ckan_config_path }}" regexp="ckanext\.deadoralive\.authorized_users" line="ckanext.deadoralive.authorized_users = deadoralive" insertafter="ckan\.plugins"
   notify: Restart Apache
