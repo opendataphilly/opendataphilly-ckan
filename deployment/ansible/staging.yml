@@ -1,0 +1,14 @@
+---
+- hosts: staging
+  sudo: True
+  roles:
+    - { role: "ckan" }
+    - { role: "ckanext-archiver" }
+    - { role: "ckanext-qa" }
+    - { role: "ckanext-disqus" }
+    - { role: "ckanext-issues" }
+    - { role: "ckanext-spatial" }
+    - { role: "ckanext-deadoralive" }
+    - { role: "ckan-deadoralive" }
+    - { role: "ckanext-odp_theme" }
+    - { role: "ckan-odp-configuration" }
