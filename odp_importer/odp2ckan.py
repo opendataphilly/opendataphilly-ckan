@@ -36,17 +36,33 @@ def import_resources(ckan_api):
 
 def clear_resources(ckan_api):
     """Attempt to delete as much as possible from the target CKAN instance."""
+    logger.info("Deleting packages from CKAN instance")
     resources = ckan_api.action.package_list()
     for resource in resources:
         ckan_api.action.package_delete(id=resource)
 
+    logger.info("Deleting organizations from CKAN instance")
     organizations = ckan_api.action.organization_list()
     for org in organizations:
         ckan_api.action.organization_purge(id=org)
 
+    logger.info("Deleting groups from CKAN instance")
     groups = ckan_api.action.group_list()
     for group in groups:
         ckan_api.action.group_purge(id=group)
+
+    logger.info("Deleting free tags from CKAN instance")
+    tags = ckan_api.action.tag_list()
+    for tag in tags:
+        ckan_api.action.tag_delete(id=tag)
+
+    logger.info("Deleting vocabulary tags from CKAN instance")
+    vocabs = ckan_api.action.vocabulary_list()
+    for vocab in vocabs:
+        tags = ckan_api.action.tag_list(vocabulary_id=vocab['id'])
+        for t in tags:
+            ckan_api.action.tag_delete(id=t, vocabulary_id=vocab['id'])
+        ckan_api.action.vocabulary_delete(id=vocab['id'])
 
     logger.warn('Successfully cleared CKAN instance.\nHowever, you will need to '
                 'navigate to http://your-ckan-instance/ckan-admin/trash/ and manually '

@@ -106,7 +106,7 @@ class ODPToCKANImporter(object):
                              ('rating', 'OpenDataPhilly Rating')]
         for field in extra_fields_list:
             if odp_resource[field[0]]:
-                extras.append(dict(key=field[1], value=str(odp_resource[field[0]])))
+                extras.append(dict(key=field[1], value=unicode(odp_resource[field[0]])))
 
         return extras
 
