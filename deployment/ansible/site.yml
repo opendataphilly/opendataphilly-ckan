@@ -10,5 +10,6 @@
     - { role: "ckanext-spatial" }
     - { role: "ckanext-deadoralive" }
     - { role: "ckan-deadoralive" }
+    - { role: "ckanext-odp_theme" }
     - { role: "odp-importer" }
     - { role: "ckan-odp-configuration" }

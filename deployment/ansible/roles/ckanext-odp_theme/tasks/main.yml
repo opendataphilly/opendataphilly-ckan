@@ -1,0 +1,14 @@
+---
+# Using the ansible pip module here results in breakage
+- name: Symlink ckan-odp_theme into ckan virtualenv
+  file: src=/vagrant_ckanext-odp_theme dest={{ ckan_virtualenv_path }}/src/ckanext-odp_theme
+        state=link
+  when: ckan_production == False
+
+- name: Run setup.py develop
+  command: "{{ ckan_virtualenv_path }}/bin/python setup.py develop
+           chdir={{ ckan_virtualenv_path }}/src/ckanext-odp_theme"
+
+- name: Add self to CKAN plugin list
+  lineinfile: dest="{{ ckan_config_path }}" regexp="^ckan.plugins(((?!odp_theme).)*)$" line="ckan.plugins\1 odp_theme" backrefs=yes
+  notify: Restart Apache

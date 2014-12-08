@@ -1,0 +1,5 @@
+---
+ckan_production: False
+ckan_virtualenv_path: "/usr/lib/ckan/default/"
+ckanext_odp_theme_local_src: "/vagrant_ckanext-odp_theme"
+ckan_config_path: "/etc/ckan/default/production.ini"
