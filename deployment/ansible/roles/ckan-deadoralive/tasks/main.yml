@@ -1,0 +1,10 @@
+---
+# Using the ansible pip module here results in breakage
+- name: Install deadoralive into ckan virtualenv
+  command: "{{ ckan_virtualenv_path }}/bin/pip install -e git+https://github.com/ckan/deadoralive.git@{{ ckan_deadoralive_version }}#egg=deadoralive"
+
+- name: Add deadoraive to cron
+  cron: name="deadoralive Link Checker"
+        special_time=hourly
+        job="{{ ckan_virtualenv_path }}/bin/deadoralive --url {{ ckan_site_url }} --apikey {{ ckan_deadoralive_apikey }}"
+  when: ckan_deadoralive_apikey != 'CHANGE_THIS'

@@ -8,5 +8,7 @@
     - { role: "ckanext-disqus" }
     - { role: "ckanext-issues" }
     - { role: "ckanext-spatial" }
+    - { role: "ckanext-deadoralive" }
+    - { role: "ckan-deadoralive" }
     - { role: "odp-importer" }
     - { role: "ckan-odp-configuration" }
