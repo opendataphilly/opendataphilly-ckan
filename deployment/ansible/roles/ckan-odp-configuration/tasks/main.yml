@@ -37,9 +37,10 @@
     notify: Restart Apache
 
   - name: Set config options
-    lineinfile: dest="{{ ckan_config_path }}" regexp="(^|\#){{ item.option }}" line="{{ item.option }} = {{ item.value }}" backrefs=yes
+    lineinfile: dest="{{ ckan_config_path }}" regexp="(^|\#){{ item.option }}" line="{{ item.option }} = {{ item.value }}" insertafter="ckan\.plugins"
     with_items:
       - { option: 'ckan.site_url', value: '{{ ckan_site_url }}' }
+      - { option: 'ckan.featured_groups', value: 'featured' }
       - { option: 'ckan.datapusher.formats', value: 'csv xls' }
       - { option: 'ckan.datapusher.url', value: 'http://127.0.0.1:8800' }
       - { option: 'ckan.activity_streams_email_notifications', value: 'true'}
