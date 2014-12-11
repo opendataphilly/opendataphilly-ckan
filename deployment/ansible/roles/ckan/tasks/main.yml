@@ -60,6 +60,9 @@
       - Restart Apache
       - Restart Nginx
 
+  - name: Ensure Apache can write to CKAN storage folder
+    file: path=/var/lib/ckan/default/storage owner=www-data mode=0755 state=directory
+
   # Jetty & Solr
   - name: Set Jetty to start on boot
     lineinfile: 'dest=/etc/default/jetty regexp=^NO_START line="NO_START=0"'

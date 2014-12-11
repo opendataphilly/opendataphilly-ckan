@@ -49,3 +49,4 @@ deployment/ansible/roles/azavea.*
 
 # ignore hosts.vagrant.example which has config options
 deployment/ansible/hosts/hosts.vagrant
+deployment/ansible/hosts/hosts.staging
