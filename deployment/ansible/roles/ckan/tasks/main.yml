@@ -60,11 +60,11 @@
       - Restart Apache
       - Restart Nginx
 
-  - name: Ensure Apache can write to CKAN storage folder
-    file: path=/var/lib/ckan/default/storage owner=www-data mode=0755 state=directory
-
-  - name: Ensure Apache can write to CKAN storage/uploads folder
-    file: path=/var/lib/ckan/default/storage/uploads owner=www-data mode=0755 state=directory
+  - name: Ensure CKAN storage folders exist and that Apache can write to them
+    file: path={{ item }} owner=www-data mode=0755 state=directory
+    with_items:
+        - /var/lib/ckan/default/storage
+        - /var/lib/ckan/default/storage/uploads
 
   # Jetty & Solr
   - name: Set Jetty to start on boot
