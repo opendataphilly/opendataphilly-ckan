@@ -1,25 +1,11 @@
 import argparse
-import logging
-import sys
+from ckan_util import logger, check_endpoints
 
 import ckanapi
 
 import opendataphilly
 
-
-logger = logging.getLogger('odp-importer')
-logger.setLevel(logging.DEBUG)
-ch = logging.StreamHandler(sys.stdout)
-ch.setLevel(logging.DEBUG)
-logger.addHandler(ch)
-
 ODP_ROOT = 'http://opendataphilly.org'
-
-
-def check_endpoints(ckan_api):
-    """Verify that the CKAN API endpoint exists and the API key is valid for it."""
-    ckan_api.action.dashboard_activity_list()
-    logger.debug('Successfully verified CKAN credentials')
 
 
 def import_resources(ckan_api):

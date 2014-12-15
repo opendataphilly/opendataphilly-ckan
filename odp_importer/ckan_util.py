@@ -1,5 +1,20 @@
+import sys
+import logging
 import ckanapi
 from slugify import slugify
+
+logger = logging.getLogger('odp-importer')
+logger.setLevel(logging.DEBUG)
+ch = logging.StreamHandler(sys.stdout)
+ch.setLevel(logging.DEBUG)
+logger.addHandler(ch)
+
+
+def check_endpoints(ckan_api):
+    """Verify that the CKAN API endpoint exists and the API key is valid for it."""
+
+    ckan_api.action.dashboard_activity_list()
+    logger.debug('Successfully verified CKAN credentials')
 
 
 def package_exists(ckan_api, id):

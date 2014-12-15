@@ -1,27 +1,13 @@
+from ckan_util import check_endpoints, logger
+
 import argparse
-import logging
-import sys
 import json
 import ckanapi
-
-
-logger = logging.getLogger('odp-importer')
-logger.setLevel(logging.DEBUG)
-ch = logging.StreamHandler(sys.stdout)
-ch.setLevel(logging.DEBUG)
-logger.addHandler(ch)
 
 
 def generate_password():
     """Generate a random password for a new user"""
     return 'password'  # TODO: actually generate a password
-
-
-def check_endpoints(ckan_api):
-    """Verify that the CKAN API endpoint exists and the API key is valid for it."""
-
-    ckan_api.action.dashboard_activity_list()
-    logger.debug('Successfully verified CKAN credentials')
 
 
 def import_users(ckan_api):
@@ -43,15 +29,15 @@ def import_users(ckan_api):
              'sysadmin': user['is_staff']}
         try:
             new_user = ckan_api.action.user_create(**u)
-            print "created user {}".format(new_user['name'])
+            logger.info("created user {}".format(new_user['name']))
         except Exception:  # try updating
             try:
                 u['id'] = u['name']
                 del u['name']
                 updated_user = ckan_api.action.user_update(**u)
-                print "updated user {}".format(updated_user['name'])
+                logger.info('updated user {}'.format(updated_user['name']))
             except Exception as e:
-                print "error with user {}".format(u['id'])
+                logger.error('error with user {}'.format(u['id']))
 
 
 def associate_users_with_orgs(ckan_api):
@@ -66,9 +52,10 @@ def associate_users_with_orgs(ckan_api):
                 ckan_api.action.organization_member_create(id=groupname,
                                                            username=member,
                                                            role="admin")
-                print "associated {} with {}".format(member, groupname)
-            except Exception as e:
-                print e
+                logger.info('associated {} with {}'.format(member, groupname))
+            except Exception:
+                logger.error('error associating {} with {}'.format(member,
+                                                                   groupname))
 
 
 def main():
