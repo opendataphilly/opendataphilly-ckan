@@ -35,7 +35,7 @@ def import_users(ckan_api):
         password = generate_password()
         if len(user['last_name']) > 0:
             fullname += ' ' + user['last_name']
-        u = {'name': user['username'].lower(),
+        u = {'name': user['username'],
              'email': user['email'],
              'password': password,
              'fullname': fullname,
@@ -54,6 +54,23 @@ def import_users(ckan_api):
                 print "error with user {}".format(u['id'])
 
 
+def associate_users_with_orgs(ckan_api):
+    """Get all users from users.json and try to insert them into CKAN."""
+
+    with open('users.json', 'r') as f:
+        data = json.load(f)
+
+    for groupname, group in data['organizations'].iteritems():
+        for member in group:
+            try:
+                ckan_api.action.organization_member_create(id=groupname,
+                                                           username=member,
+                                                           role="admin")
+                print "associated {} with {}".format(member, groupname)
+            except Exception as e:
+                print e
+
+
 def main():
     parser = argparse.ArgumentParser(description='Load users.json to CKAN')
     parser.add_argument('--api-key', required=True, help='CKAN API Key')
@@ -63,6 +80,7 @@ def main():
     # Will raise on failure.
     check_endpoints(ckan)
     import_users(ckan)
+    associate_users_with_orgs(ckan)
 
 
 if __name__ == '__main__':

@@ -12,7 +12,7 @@ import json
 import sys
 from ckan_util import ckan_slugify as slugify
 
-fake_email = False
+fake_email = True
 
 
 def gen_fake_email(user):
@@ -88,6 +88,7 @@ with open(sys.argv[1], 'r') as f:
         if L == '\\.':
             break
         user = line_to_dict(L, user_indicies)
+        user['username'] = user['username'].lower()
         if fake_email:
             user['email'] = gen_fake_email(user)
         if user_spam_filter(user):
