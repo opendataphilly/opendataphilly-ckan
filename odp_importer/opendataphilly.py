@@ -35,7 +35,7 @@ class ODPToCKANImporter(object):
         logger.debug('Parsing ODP resource "%s"' % odp_resource['name'])
         resource_links = dict()
 
-        pkg_slug = ckan_util.slugify(odp_resource['name'])
+        pkg_slug = ckan_util.ckan_slugify(odp_resource['name'])
         # Bail if package already exists
         if ckan_util.package_exists(self.ckan_api, pkg_slug):
             logger.info('CKAN Package for %s already exists; skipping.' % odp_resource['name'])
@@ -56,7 +56,7 @@ class ODPToCKANImporter(object):
         # Check for the organization and division; organizations can't nest, but
         # users can belong to multiple organizations, so we make organizations at
         # the lowest level available.
-        org_slug = ckan_util.slugify(odp_resource['division']) or ckan_util.slugify(odp_resource['organization'])
+        org_slug = ckan_util.ckan_slugify(odp_resource['division']) or ckan_util.ckan_slugify(odp_resource['organization'])
         org_title = odp_resource['division'] or odp_resource['organization']
         if not ckan_util.organization_exists(self.ckan_api, org_slug):
             self.ckan_api.action.organization_create(name=org_slug,
@@ -73,7 +73,7 @@ class ODPToCKANImporter(object):
         :param resource_links: Dict of IDs of CKAN objects to which this resource has links
                                 (e.g. organizations)
         """
-        return dict(name=ckan_util.slugify(odp_resource['name']),
+        return dict(name=ckan_util.ckan_slugify(odp_resource['name']),
                     title=odp_resource['name'],
                     maintainer_email=odp_resource['contact_email'],
                     notes=odp_resource['description'],
@@ -121,7 +121,7 @@ class ODPToCKANImporter(object):
             # Despite having different API calls, organizations and groups
             # share the same pool of slugs; add a -group suffix to prevent
             # collisions (unless some things have very odd names).
-            group_slug = ckan_util.slugify(tag['name']) + '-group'
+            group_slug = ckan_util.ckan_slugify(tag['name']) + '-group'
             if not ckan_util.group_exists(self.ckan_api, group_slug):
                 self.ckan_api.action.group_create(name=group_slug, title=tag['name'])
             results.append(group_slug)
@@ -168,7 +168,7 @@ class ODPToCKANImporter(object):
         for tag in tags:
             if not tag:
                 continue
-            tag_slug = slug_transform(ckan_util.slugify(tag))
+            tag_slug = slug_transform(ckan_util.ckan_slugify(tag))
             if not ckan_util.tag_exists(self.ckan_api, tag_slug):
                 self.ckan_api.action.tag_create(name=tag_slug,
                                                 display_name=tag,
