@@ -24,7 +24,7 @@ def str_to_bool(x):
         return True
     return False
 
-user_indicies = [
+user_indices = [
     ('id', 0, int),
     ('username', 1, str),
     ('first_name', 2, str),
@@ -37,7 +37,7 @@ user_indicies = [
     ('date_joined', 10, str)
 ]
 
-resource_indicies = [
+resource_indices = [
     ('organization', 4, lambda x: x.decode('utf8')),
     ('division', 5, lambda x: x.decode('utf8')),
     ('created_by_id', 16, int),
@@ -87,7 +87,7 @@ with open(sys.argv[1], 'r') as f:
         L = L.rstrip('\n')
         if L == '\\.':
             break
-        user = line_to_dict(L, user_indicies)
+        user = line_to_dict(L, user_indices)
         user['username'] = user['username'].lower()
         if fake_email:
             user['email'] = gen_fake_email(user)
@@ -106,7 +106,7 @@ with open(sys.argv[1], 'r') as f:
         L = L.rstrip('\n')
         if L == '\\.':
             break
-        res = line_to_dict(L, resource_indicies)
+        res = line_to_dict(L, resource_indices)
         res['org_slug'] = slugify(res['division']) or \
             slugify(res['organization'])
         if res['org_slug'] not in orgs:
