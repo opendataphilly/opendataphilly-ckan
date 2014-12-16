@@ -51,5 +51,7 @@ deployment/ansible/roles/azavea.*
 deployment/ansible/hosts/hosts.vagrant
 deployment/ansible/hosts/hosts.staging
 
-# users.json
+# users.json + created_accounts.csv
 odp_importer/users.json
+odp_importer/created_accounts.csv
+odp_importer/assign_reset_key.sql

@@ -1,13 +1,37 @@
-from ckan_util import check_endpoints, logger
 
+from random import SystemRandom
 import argparse
 import json
 import ckanapi
 
+from ckan_util import check_endpoints, logger
+
+random = SystemRandom()
+
+sql_reset_key = '''UPDATE "user" SET "reset_key" = '%s' WHERE "id" = '%s';\n'''
+
+reset_url = 'http://localhost:8025/user/reset/%s?key=%s'
+
 
 def generate_password():
     """Generate a random password for a new user"""
-    return 'password'  # TODO: actually generate a password
+
+    chars = '23456789qwertyuiopasdfghjkzxcvbnmQWERTYUPADSFGHJKLZXCVBNM$!#'
+    # this long password essentially locks the account
+    return ''.join([random.choice(chars) for x in range(30)])
+
+
+def generate_reset_key():
+    """Generate a random password for a new user"""
+
+    chars = '1234567890abcdef'
+    return ''.join([random.choice(chars) for x in range(10)])
+
+
+def write_info(username, email, id, reset_key, csv, sql):
+    csv.write('%s,%s,%s\n' % (username, email,
+                              reset_url % (id, reset_key)))
+    sql.write(sql_reset_key % (reset_key, id))
 
 
 def import_users(ckan_api):
@@ -16,28 +40,37 @@ def import_users(ckan_api):
     with open('users.json', 'r') as f:
         data = json.load(f)
 
+    csv = open('created_accounts.csv', 'w')
+    sql = open('assign_reset_key.sql', 'w')
+
     for user in data['users'].values():
-        password = generate_password()
         fullname = user['first_name']
         if len(user['last_name']) > 0:
             fullname += ' ' + user['last_name']
+        reset_key = generate_reset_key()
         u = {'name': user['username'],
              'email': user['email'],
-             'password': password,
+             'password': generate_password(),  # password is required
              'fullname': fullname,
              'state': 'active',
              'sysadmin': user['is_staff']}
         try:
-            new_user = ckan_api.action.user_create(**u)
-            logger.info("created user %s" % new_user['name'])
+            updated_user = ckan_api.action.user_create(**u)
+            write_info(user['username'], user['email'], updated_user['id'],
+                       reset_key, csv, sql)
+            logger.info("created user %s" % updated_user['name'])
         except Exception:  # try updating
             try:
                 u['id'] = u['name']
                 del u['name']
                 updated_user = ckan_api.action.user_update(**u)
+                write_info(user['username'], user['email'], updated_user['id'],
+                           reset_key, csv, sql)
                 logger.info('updated user %s' % updated_user['name'])
             except Exception:
                 logger.error('error with user %s' % u['id'])
+
+    f.close()
 
 
 def associate_users_with_orgs(ckan_api):
