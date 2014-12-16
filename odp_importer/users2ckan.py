@@ -17,8 +17,8 @@ def import_users(ckan_api):
         data = json.load(f)
 
     for user in data['users'].values():
-        fullname = user['first_name']
         password = generate_password()
+        fullname = user['first_name']
         if len(user['last_name']) > 0:
             fullname += ' ' + user['last_name']
         u = {'name': user['username'],
@@ -29,15 +29,15 @@ def import_users(ckan_api):
              'sysadmin': user['is_staff']}
         try:
             new_user = ckan_api.action.user_create(**u)
-            logger.info("created user {}".format(new_user['name']))
+            logger.info("created user %s" % new_user['name'])
         except Exception:  # try updating
             try:
                 u['id'] = u['name']
                 del u['name']
                 updated_user = ckan_api.action.user_update(**u)
-                logger.info('updated user {}'.format(updated_user['name']))
-            except Exception as e:
-                logger.error('error with user {}'.format(u['id']))
+                logger.info('updated user %s' % updated_user['name'])
+            except Exception:
+                logger.error('error with user %s' % u['id'])
 
 
 def associate_users_with_orgs(ckan_api):
@@ -52,10 +52,10 @@ def associate_users_with_orgs(ckan_api):
                 ckan_api.action.organization_member_create(id=groupname,
                                                            username=member,
                                                            role="admin")
-                logger.info('associated {} with {}'.format(member, groupname))
+                logger.info('associated %s with %s' % (member, groupname))
             except Exception:
-                logger.error('error associating {} with {}'.format(member,
-                                                                   groupname))
+                logger.error('error associating %s with %s' % (member,
+                                                               groupname))
 
 
 def main():
