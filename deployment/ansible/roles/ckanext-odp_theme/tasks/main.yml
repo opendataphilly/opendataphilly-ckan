@@ -11,7 +11,7 @@
 
 - name: Run setup.py develop
   command: "{{ ckan_virtualenv_path }}/bin/python setup.py develop
-           chdir={{ ckan_virtualenv_path }}/src/ckanext-odp_theme"
+            chdir={{ ckan_virtualenv_path }}/src/ckanext-odp-theme"
   when: ckan_production | bool == False
 
 - name: Install SASS Compiler
