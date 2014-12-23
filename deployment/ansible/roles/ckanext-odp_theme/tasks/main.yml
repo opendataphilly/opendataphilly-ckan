@@ -20,6 +20,14 @@
 - name: Compile SASS
   command: "sass {{ ckan_virtualenv_path }}src/ckanext-odp-theme/ckanext/odp_theme/public/css/sass/main.scss {{ ckan_virtualenv_path }}src/ckanext-odp-theme/ckanext/odp_theme/public/css/main.css"
 
+- name: Set config options
+  lineinfile: dest="{{ ckan_config_path }}" regexp="(^|\#){{ item.option }}" line="{{ item.option }} = {{ item.value }}" insertafter="ckan\.plugins"
+  with_items:
+    - { option: 'ckan.site_title', value: 'OpenDataPhilly' }
+    - { option: 'ckan.favicon', value: '/img/favicon.png' }
+    - { option: 'ckan.site_logo', value: '/img/odp-logo.svg' }
+  notify: Restart Apache
+
 - name: Add self to CKAN plugin list
   lineinfile: dest="{{ ckan_config_path }}" regexp="^ckan.plugins(((?!odp_theme).)*)$" line="ckan.plugins\1 odp_theme" backrefs=yes
   notify: Restart Apache
