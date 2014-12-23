@@ -1,6 +1,6 @@
 ---
 ckan_production: False
-ckanext_odp_theme_version: "8c3769e4c23370bef3cd0d89c6a05eb053f4edf6"
+ckanext_odp_theme_version: "544f93b12fd322437634a61cb7a8691b36e3ebde"
 ckan_virtualenv_path: "/usr/lib/ckan/default/"
 ckanext_odp_theme_local_src: "/vagrant_ckanext-odp_theme"
 ckan_config_path: "/etc/ckan/default/production.ini"
