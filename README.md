@@ -25,3 +25,10 @@ Development Installation
   cd /usr/lib/ckan/default/src/ckan
   paster sysadmin add <USERNAME> -c /etc/ckan/default/production.ini
   ```
+
+Deployment
+-----------------
+
+1. Launch a server running Ubuntu 12.04
+2. Copy deployment/ansible/hosts/hosts.staging.example to hosts.staging and edit any settings you wish to change (see above). Make sure that ckan\_site\_url matches the address at which you will access the site.
+3. Run `ANSIBLE_HOST_KEY_CHECKING=false ansible-playbook --private-key=/absolute/path/to/server/key/file.pem --user=ubuntu --inventory-file=deployment/ansible/hosts/hosts.staging deployment/ansible/staging.yml -v`
