@@ -47,9 +47,12 @@ nosetests.xml
 # Ansible roles
 deployment/ansible/roles/azavea.*
 
-# ignore hosts.vagrant.example which has config options
-deployment/ansible/hosts/hosts.vagrant
+# ignore hosts.staging.example after adding host info
 deployment/ansible/hosts/hosts.staging
+
+# ignore group_vars after adding config options
+deployment/ansible/group_vars/staging
+deployment/ansible/group_vars/vagrant
 
 # users.json + created_accounts.csv
 odp_importer/users.json
