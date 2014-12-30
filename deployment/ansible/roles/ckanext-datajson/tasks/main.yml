@@ -4,7 +4,19 @@
   command: "{{ ckan_virtualenv_path }}/bin/pip install jsonschema pyyaml lepl"
 
 - name: Install ckanext-datajson into ckan virtualenv
-  command: "{{ ckan_virtualenv_path }}/bin/pip install -e git+https://github.com/GSA/ckanext-datajson.git@{{ ckanext_datajson_version }}#egg=ckanext-datajson"
+  command: "{{ ckan_virtualenv_path }}/bin/pip install -e git+https://github.com/azavea/ckanext-datajson.git@{{ ckanext_datajson_version }}#egg=ckanext-datajson"
+  when: ckan_production | bool
+
+- name: Symlink ckanext-datajson into ckan virtualenv
+  file: src={{ vagrant_ckanext_datajson_mountpoint }} dest={{ ckan_virtualenv_path }}/src/ckanext-datajson
+        state=link
+  when: ckan_production | bool == False
+
+- name: Run setup.py develop
+  command: "{{ ckan_virtualenv_path }}/bin/python setup.py develop
+            chdir={{ ckan_virtualenv_path }}/src/ckanext-datajson"
+  when: ckan_production | bool == False
+
 
 - name: Add workaround to apache.wsgi
   lineinfile: dest={{ ckan_wsgi_path }}
