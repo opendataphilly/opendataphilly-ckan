@@ -44,6 +44,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
   config.vm.synced_folder "../ckanext-odp_theme", "/vagrant_ckanext-odp_theme", nfs: true
+  config.vm.synced_folder "../ckanext-datajson", "/vagrant_ckanext-datajson", nfs: true
 
   config.vm.provision :ansible do |ansible|
     ansible.playbook = "deployment/ansible/site.yml"
