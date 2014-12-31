@@ -1,0 +1,18 @@
+#!/bin/bash
+
+DATE=`date +%Y-%m-%d`
+PASTER="/usr/lib/ckan/default/bin/paster"
+CKAN_DIR="/usr/lib/ckan/default/src/ckan/"
+CKAN_CONFIG="/etc/ckan/default/production.ini"
+BACKUP_DIR="{{ ckan_database_backups }}"
+
+BACKUP_FILE="$BACKUP_DIR/$DATE.sql"
+
+exec 1> /dev/null
+
+pushd $CKAN_DIR
+
+$PASTER db dump --config=$CKAN_CONFIG $BACKUP_FILE
+gzip -f -9 $BACKUP_FILE
+
+popd
