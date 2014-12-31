@@ -75,3 +75,15 @@
     cron: job="echo '{}' | /usr/lib/ckan/default/bin/paster --plugin=ckan post -c {{ ckan_config_path }} /api/action/send_email_notifications > /dev/null"
           name="Send Email Notifications"
           special_time=hourly
+
+  - name: Make sure database backup dir exists
+    file: path={{ ckan_database_backups }} state=directory
+
+  - name: Copy database backup script
+    template: src=backup.sh.j2
+              dest={{ ckan_database_backup_script }}
+              mode="0755"
+
+  - name: Add database backup crontab
+    cron: job="{{ ckan_database_backup_script }}" special_time=daily
+          name="Backup database"
