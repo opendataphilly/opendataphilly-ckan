@@ -1,0 +1,12 @@
+---
+ckan_disqus_shortname: ENTER_SHORTNAME_HERE
+python_version: 2.7.3-0ubuntu2.2
+pip_version: 1.0-1build1
+ckan_site_url: http://localhost:8080/
+ckan_deadoralive_apikey: CHANGE_THIS
+ckan_production: false
+#ckan_smtp_mail_from:
+#ckan_smtp_user:
+#ckan_smtp_server:
+#ckan_smtp_starttls:
+#ckan_smtp_password:
