@@ -33,3 +33,30 @@ Deployment
 2. Copy `deployment/ansible/hosts/hosts.staging.example` to `hosts.staging` and enter the address of the server that was just launched.
 3. Copy `deployment/ansible/group_vars/staging.example` to `staging` and edit any settings you wish to change (see above). Make sure that `ckan_site_url` matches the address at which you will access the site.
 4. Run `ANSIBLE_HOST_KEY_CHECKING=false ansible-playbook --private-key=/absolute/path/to/server/key/file.pem --user=ubuntu --inventory-file=deployment/ansible/hosts/hosts.staging deployment/ansible/staging.yml -v`
+
+
+Migrating database from host to host
+-----------------
+
+### Export the database from the source host
+```
+cd /usr/lib/ckan/default/src/ckan
+/usr/lib/ckan/default/bin/paster db dump --config=/etc/ckan/default/production.ini /root/database.sql
+```
+Then move `/root/database.sql` to the destination host
+
+### On the destination host, shut down apache, clear the database, and load from file
+```
+service apache2 stop
+cd /usr/lib/ckan/default/src/ckan
+/usr/lib/ckan/default/bin/paster db clean --config=/etc/ckan/default/production.ini
+psql -U ckan_default -h 127.0.0.1 -W -d ckan_default -f /root/database.sql
+```
+### Restart apache
+```
+service apache2 start
+```
+### Re-index search (in /usr/lib/ckan/default/src/ckan)
+```
+/usr/lib/ckan/default/bin/paster search-index rebuild --config=/etc/ckan/default/production.ini
+```
