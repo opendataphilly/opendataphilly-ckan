@@ -5,6 +5,9 @@ PASTER="/usr/lib/ckan/default/bin/paster"
 CKAN_DIR="/usr/lib/ckan/default/src/ckan/"
 CKAN_CONFIG="/etc/ckan/default/production.ini"
 BACKUP_DIR="{{ ckan_database_backups }}"
+S3CMD_CFG="{{ db_backup_s3cfg | default('') }}"
+S3_BUCKET="{{ db_backup_s3_bucket | default('') }}"
+HOSTNAME=`hostname`
 
 BACKUP_FILE="$BACKUP_DIR/$DATE.sql"
 
@@ -14,5 +17,10 @@ pushd $CKAN_DIR
 
 $PASTER db dump --config=$CKAN_CONFIG $BACKUP_FILE
 gzip -f -9 $BACKUP_FILE
+s3cmd -c $S3CMD_CFG put $BACKUP_FILE.gz s3://$S3_BUCKET/$DATE-$HOSTNAME.gz 2> /dev/null
+if [ $? -eq 0 ]  # leave file on filesystem on failure
+then
+    rm $BACKUP_FILE.gz
+fi
 
 popd
