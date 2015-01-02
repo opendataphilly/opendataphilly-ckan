@@ -79,6 +79,11 @@
   - name: Make sure database backup dir exists
     file: path={{ ckan_database_backups }} state=directory
 
+  - name: Make sure s3cmd is installed
+    apt: name=s3cmd state=present
+    when: db_backup_s3_access_key is defined and
+          db_backup_s3_secret_key is defined
+
   - name: Copy s3cmd config
     template: src=s3cfg
               dest={{ db_backup_s3cfg }}
@@ -90,11 +95,7 @@
     template: src=backup.sh.j2
               dest={{ ckan_database_backup_script }}
               mode="0755"
-    when: db_backup_s3_access_key is defined and
-          db_backup_s3_secret_key is defined
 
   - name: Add database backup crontab
     cron: job="{{ ckan_database_backup_script }}" special_time=daily
           name="Backup database"
-    when: db_backup_s3_access_key is defined and
-          db_backup_s3_secret_key is defined
