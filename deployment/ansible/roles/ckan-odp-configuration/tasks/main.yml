@@ -36,6 +36,9 @@
     lineinfile: 'dest=/etc/ckan/default/production.ini regexp="(ckan\.auth\.create_user_via_web)" line="\1 = true" backrefs=yes'
     notify: Restart Apache
 
+  - name: Install licenses
+    copy: src=licenses.json dest={{ ckan_licenses }}
+
   - name: Set config options
     lineinfile: dest="{{ ckan_config_path }}" regexp="(^|\#){{ item.option }}" line="{{ item.option }} = {{ item.value }}" insertafter="ckan\.plugins"
     with_items:
@@ -49,6 +52,7 @@
       - { option: 'smtp.server', value: "{{ ckan_smtp_server }}" }
       - { option: 'smtp.starttls', value: "{{ ckan_smtp_starttls }}" }
       - { option: 'smtp.password', value: "{{ ckan_smtp_password }}" }
+      - { option: 'licenses_group_url', value: "file://{{ ckan_licenses }}"}
     notify: Restart Apache
 
   - name: Add plugins to ckan.plugins
