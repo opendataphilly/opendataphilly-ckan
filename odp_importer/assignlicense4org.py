@@ -4,6 +4,7 @@ import ckanapi
 
 from ckan_util import check_endpoints, logger
 
+from pprint import pprint
 
 def assign_license(ckan_api, org, license):
     """Set the license for all datasets owned by an org to the one given"""
@@ -32,17 +33,28 @@ def main():
     parser = argparse.ArgumentParser(description='Set a license for all '
                                                  'datasets owned by an '
                                                  'organization')
-    parser.add_argument('org', metavar='ORG', help='Organization')
-    parser.add_argument('license', metavar='LICENSE', help='License')
+    parser.add_argument('org', metavar='ORG', help='Organization slug or id')
+    parser.add_argument('license', metavar='LICENSE', help='License slug or '
+                                                           'title')
     parser.add_argument('--api-key', required=True, help='CKAN API Key')
     parser.add_argument('--ckan-root', required=True, help='Root URI of CKAN '
                                                            'Instance')
+    parser.add_argument('--match-prefix', action='store_const', default=False,
+                        const=True, help='Match all orgs where title starts '
+                                         'with the string provided')
     args = parser.parse_args()
     ckan = ckanapi.RemoteCKAN(args.ckan_root, apikey=args.api_key)
     # Will raise on failure.
     check_endpoints(ckan)
     license = get_license(ckan, args.license)
-    assign_license(ckan, args.org, license)
+    if args.match_prefix:
+        for org in ckan.action.organization_list(all_fields=True):
+            if org['title'].startswith(args.org):
+                logger.info('-- REASSIGNING LICENSES FOR ORG %s' %
+                            org['title'])
+                assign_license(ckan, org['id'], license)
+    else:
+        assign_license(ckan, args.org, license)
 
 
 if __name__ == '__main__':
