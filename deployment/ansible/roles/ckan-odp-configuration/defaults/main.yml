@@ -9,3 +9,4 @@ ckan_database_backups: "/root/db_backups"
 ckan_database_backup_script: "/root/backup_db.sh"
 ckan_licenses: "/usr/local/share/licenses.json"
 db_backup_s3cfg: "/root/s3cfg"
+ckan_ssl: True

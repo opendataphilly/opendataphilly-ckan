@@ -103,3 +103,11 @@
   - name: Add database backup crontab
     cron: job="{{ ckan_database_backup_script }}" special_time=daily
           name="Backup database"
+
+# SSL/TLS
+  - name: Copy Nginx Configuration
+    template: src=nginx_ckan.j2
+              dest=/etc/nginx/sites-available/ckan
+              mode="0644"
+    when: ckan_ssl
+    notify: Restart Nginx

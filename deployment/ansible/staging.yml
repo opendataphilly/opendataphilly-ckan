@@ -9,6 +9,8 @@
     - { role: "ckanext-issues" }
     - { role: "ckanext-spatial" }
     - { role: "ckanext-deadoralive" }
+    - { role: "ckanext-pages" }
+    - { role: "ckanext-datajson" }
     - { role: "ckan-deadoralive" }
     - { role: "ckanext-odp_theme" }
     - { role: "ckan-odp-configuration" }
