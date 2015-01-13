@@ -1,0 +1,4 @@
+---
+ckan_virtualenv_path: "/usr/lib/ckan/default/"
+ckanext_googleanalytics_version: "0febe11dc512978e610fffd7895b5a040e4ab197"
+ckan_config_path: "/etc/ckan/default/production.ini"

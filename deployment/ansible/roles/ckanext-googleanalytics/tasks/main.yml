@@ -1,0 +1,14 @@
+---
+# Using the ansible pip module here results in breakage
+- name: Install ckanext-googleanalytics into ckan virtualenv
+  command: "{{ ckan_virtualenv_path }}/bin/pip install -e git+https://github.com/ckan/ckanext-googleanalytics.git@{{ ckanext_googleanalytics_version }}#egg=ckanext-googleanalytics"
+
+- name: Add self to CKAN plugin list
+  lineinfile: dest="{{ ckan_config_path }}" regexp="^ckan.plugins(((?!googleanalytics).)*)$" line="ckan.plugins\1 googleanalytics" backrefs=yes
+  notify: Restart Apache
+  when: googleanalytics_id is defined
+
+- name: Add Google Analytics configuration
+  lineinfile: dest="{{ ckan_config_path }}" regexp="googleanalytics\.id" line="googleanalytics.id = {{ googleanalytics_id }}" insertafter="ckan\.plugins"
+  notify: Restart Apache
+  when: googleanalytics_id
