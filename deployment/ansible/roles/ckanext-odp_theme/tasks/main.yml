@@ -28,6 +28,10 @@
     - { option: 'ckan.site_logo', value: '/img/odp-logo.svg' }
   notify: Restart Apache
 
+# Add to front of plugins list so our theme can override everything
 - name: Add self to CKAN plugin list
-  lineinfile: dest="{{ ckan_config_path }}" regexp="^ckan.plugins(((?!odp_theme).)*)$" line="ckan.plugins\1 odp_theme" backrefs=yes
+  lineinfile: dest="{{ ckan_config_path }}"
+              regexp="^ckan.plugins \= (((?!odp_theme).)*)$"
+              line="ckan.plugins = odp_theme \1"
+              backrefs=yes
   notify: Restart Apache
