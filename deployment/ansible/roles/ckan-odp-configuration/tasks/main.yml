@@ -105,9 +105,18 @@
           name="Backup database"
 
 # SSL/TLS
+  - name: Copy SSL/TLS private key
+    copy: src=certs/{{ ckan_ssl_key }} dest=/etc/ssl/private/{{ ckan_ssl_key }}
+          mode="0600"
+    when: ckan_ssl_key is defined
+
+  - name: Copy SSL/TLS certificate
+    copy: src=certs/{{ ckan_ssl_cert }} dest=/etc/ssl/certs/{{ ckan_ssl_cert }}
+          mode="0644"
+    when: ckan_ssl_cert is defined
+
   - name: Copy Nginx Configuration
     template: src=nginx_ckan.j2
               dest=/etc/nginx/sites-available/ckan
               mode="0644"
-    when: ckan_ssl
     notify: Restart Nginx
