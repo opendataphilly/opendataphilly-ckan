@@ -1,0 +1,7 @@
+Hello,
+
+Your username is {username}.
+
+Go to {url} to reset.
+
+{email}
