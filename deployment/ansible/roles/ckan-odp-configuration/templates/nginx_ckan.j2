@@ -3,7 +3,7 @@ proxy_temp_path /tmp/nginx_proxy 1 2;
 
 server {
     listen 80;
-    return 301 https://$host$request_uri;
+    return 301 {{ ckan_site_url }}$request_uri;
 }
 
 server {
