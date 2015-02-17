@@ -10,3 +10,10 @@
     - resource_proxy
     - geojson_preview
     - wms_preview
+
+- name: Configure base layers
+  lineinfile: dest="{{ ckan_config_path }}" regexp="(^|\#){{ item.option }}" line="{{ item.option }} = {{ item.value }}" insertafter="ckan\.plugins"
+  with_items:
+    - { option: 'ckanext.spatial.common_map.type', value: 'custom' }
+    - { option: 'ckanext.spatial.common_map.custom.url', value: '{{ ckanext_spatial_url }}' }
+    - { option: 'ckanext.spatial.common_map.attribution', value: '{{ ckanext_spatial_attribution }}' }
