@@ -23,4 +23,16 @@ server {
         # In emergency comment out line to force caching
         # proxy_ignore_headers X-Accel-Expires Expires Cache-Control;
     }
+    location = / {
+        proxy_pass http://127.0.0.1:8080/;
+        proxy_set_header Host $host;
+        proxy_cache cache;
+        proxy_cache_bypass $cookie_auth_tkt;
+        proxy_no_cache $cookie_auth_tkt;
+        proxy_cache_valid 30m;
+        proxy_cache_key $host$scheme$proxy_host$request_uri;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_ignore_headers Cache-Control;
+        add_header X-Proxy-Cache $upstream_cache_status;
+    }
 }
