@@ -150,8 +150,5 @@
     lineinfile: 'dest=/etc/ckan/default/production.ini regexp="ckan.storage_path" line="ckan.storage_path = /var/lib/ckan/default"'
 
   - name: Ensure Apache can write to FileStore directory
-    # Introduced in Ansible 1.4, deprecated 3 months later in Ansible 1.5. *sigh*
-    acl: name=/var/lib/ckan/default entry='user:www-data:u+rwx'
-    # This is now the preferred syntax but unsupported in Ansible 1.4
-    #acl: name=/var/lib/ckan/default entity=www-data etype=user permissions=u+rwx
+    acl: name=/var/lib/ckan/default entity=www-data etype=user permissions=u+rwx
     notify: Restart Apache
