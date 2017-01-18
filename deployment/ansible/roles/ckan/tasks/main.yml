@@ -30,6 +30,7 @@
       - iftop
       - iotop
       - libapache2-mod-wsgi
+      - libffi-dev
       - libpq5
       - nginx
       - postgresql
