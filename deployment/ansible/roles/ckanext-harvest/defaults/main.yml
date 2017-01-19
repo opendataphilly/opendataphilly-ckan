@@ -1,4 +1,2 @@
 ---
-ckan_virtualenv_path: "/usr/lib/ckan/default/"
 ckanext_harvest_version: "stable"
-ckan_config_path: "/etc/ckan/default/production.ini"

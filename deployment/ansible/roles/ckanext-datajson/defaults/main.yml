@@ -1,6 +1,4 @@
 ---
-ckan_virtualenv_path: "/usr/lib/ckan/default/"
 ckanext_datajson_version: "azavea-develop"
-ckan_config_path: "/etc/ckan/default/production.ini"
 ckan_wsgi_path: "/etc/ckan/default/apache.wsgi"
 vagrant_ckanext_datajson_mountpoint: "/vagrant_ckanext-datajson"
