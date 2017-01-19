@@ -1,7 +1,5 @@
 ---
-ckan_virtualenv_path: "/usr/lib/ckan/default/"
 ckanext_issues_version: "6e90ff95a30356c6550f988d1a6a124a3092486c"
-ckan_config_path: "/etc/ckan/default/production.ini"
 ckanext_issues_notify_admin: True
 ckanext_issues_notify_owner: True
 ckanext_issues_from_address: "ckan-test@localhost.local"
