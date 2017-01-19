@@ -1,7 +1,5 @@
 ---
 ckan_production: False
 ckanext_odp_theme_version: "develop"
-ckan_virtualenv_path: "/usr/lib/ckan/default/"
 ckanext_odp_theme_local_src: "/vagrant_ckanext-odp_theme"
-ckan_config_path: "/etc/ckan/default/production.ini"
 vagrant_ckanext_odp_theme_mountpoint: "/vagrant_ckanext-odp_theme"
