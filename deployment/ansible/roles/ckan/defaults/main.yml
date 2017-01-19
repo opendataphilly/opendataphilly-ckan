@@ -2,7 +2,7 @@
 db_name: ckan_default
 db_user: ckan_default
 db_password: ckan_default
-ckan_package_filename: 'python-ckan_2.2_amd64.deb'
+ckan_package_filename: 'python-ckan_2.6-trusty_amd64.deb'
 ckan_config_path: "/etc/ckan/default/production.ini"
 # Installed by the CKAN package, used by plugin roles
 ckan_virtualenv_path: "/usr/lib/ckan/default/"

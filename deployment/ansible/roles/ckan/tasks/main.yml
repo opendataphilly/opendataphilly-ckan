@@ -67,6 +67,10 @@
         - /var/lib/ckan/default/storage
         - /var/lib/ckan/default/storage/uploads
 
+  - name: Set CKAN site_url
+    lineinfile: 'dest={{ ckan_config_path }} regexp=ckan.site_url line="ckan.site_url = {{ ckan_site_url }}"'
+
+
   # Jetty & Solr
   - name: Set Jetty to start on boot
     lineinfile: 'dest=/etc/default/jetty regexp=^NO_START line="NO_START=0"'
@@ -141,7 +145,7 @@
     lineinfile: 'dest={{ ckan_config_path }} regexp="ckan.datastore.read_url" line="ckan.datastore.read_url = postgresql://datastore_default:{{ db_password }}@localhost/datastore_default"'
 
   - name: Set DataStore database permissions
-    command: ckan datastore set-permissions postgres
+    shell: ckan datastore set-permissions | sudo -u postgres psql --set ON_ERROR_STOP=1
 
   # FileStore
   - name: Ensure FileStore directory exists
