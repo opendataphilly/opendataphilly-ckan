@@ -78,7 +78,7 @@
     lineinfile: 'dest=/etc/default/jetty regexp=^JETTY_PORT line="JETTY_PORT=8983"'
 
   - name: Set Jetty to use system java
-    lineinfile: 'dest=/etc/default/jetty regexp=JAVA_HOME line="JAVA_HOME=/usr/lib/jvm/java-6-openjdk-amd64/"'
+    lineinfile: 'dest=/etc/default/jetty regexp=JAVA_HOME line="JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/"'
     notify: Start Jetty
 
   - name: Remove CKAN schema file
