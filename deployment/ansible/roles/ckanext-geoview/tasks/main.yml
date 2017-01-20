@@ -1,7 +1,7 @@
 ---
 # Using the ansible pip module here results in breakage
-- name: Install ckanext-spatial into ckan virtualenv
-  command: "{{ ckan_virtualenv_path }}/bin/pip install -e git+https://github.com/ckan/ckanext-spatial.git@{{ ckanext_spatial_version }}#egg=ckanext-spatial"
+- name: Install ckanext-geoview into ckan virtualenv
+  command: "{{ ckan_virtualenv_path }}/bin/pip install -e git+https://github.com/ckan/ckanext-geoview.git@{{ ckanext_geoview_version }}#egg=ckanext-geoview"
 
 - name: Add self to CKAN plugin list
   lineinfile: dest="{{ ckan_config_path }}" regexp="^ckan.plugins(((?!{{ item }}).)*)$" line="ckan.plugins\1 {{ item }}" backrefs=yes
@@ -9,11 +9,11 @@
   with_items:
     - resource_proxy
     - geojson_preview
-    - wms_preview
+    - wmts_preview
 
 - name: Configure base layers
   lineinfile: dest="{{ ckan_config_path }}" regexp="(^|\#){{ item.option }}" line="{{ item.option }} = {{ item.value }}" insertafter="ckan\.plugins"
   with_items:
-    - { option: 'ckanext.spatial.common_map.type', value: 'custom' }
-    - { option: 'ckanext.spatial.common_map.custom.url', value: '{{ ckanext_spatial_url }}' }
-    - { option: 'ckanext.spatial.common_map.attribution', value: '{{ ckanext_spatial_attribution }}' }
+    - { option: 'ckanext.geoview.common_map.type', value: 'custom' }
+    - { option: 'ckanext.geoview.common_map.custom.url', value: '{{ ckanext_geoview_url }}' }
+    - { option: 'ckanext.geoview.common_map.attribution', value: '{{ ckanext_geoview_attribution }}' }
