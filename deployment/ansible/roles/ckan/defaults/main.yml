@@ -6,3 +6,7 @@ ckan_package_filename: 'python-ckan_2.2-trusty_amd64.deb'
 ckan_config_path: "/etc/ckan/default/production.ini"
 # Installed by the CKAN package, used by plugin roles
 ckan_virtualenv_path: "/usr/lib/ckan/default/"
+
+ckan_pip_dependencies:
+  - { name: 'urllib3[secure]', version: '1.19.1' }
+  - { name: 'requests[security]', version: '2.10.0' }

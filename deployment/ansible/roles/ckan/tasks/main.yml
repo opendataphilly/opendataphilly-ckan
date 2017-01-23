@@ -30,6 +30,8 @@
       - iftop
       - iotop
       - libapache2-mod-wsgi
+      - libffi-dev
+      - libssl-dev
       - libpq5
       - nginx
       - postgresql
@@ -38,6 +40,7 @@
       - python-psycopg2
       - python-pycurl
       - python-software-properties
+      - python-dev
       - screen
       - solr-jetty
       - sudo
@@ -65,6 +68,10 @@
     with_items:
         - /var/lib/ckan/default/storage
         - /var/lib/ckan/default/storage/uploads
+
+  - name: Install pip packages not covered by dependencies
+    pip: name={{ item.name }} version={{ item.version }} virtualenv={{ ckan_virtualenv_path }}
+    with_items: ckan_pip_dependencies
 
   # Jetty & Solr
   - name: Set Jetty to start on boot
