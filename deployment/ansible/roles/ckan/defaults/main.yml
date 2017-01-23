@@ -18,3 +18,8 @@ ckan_simple_plugins:
     version: '99c48f31d72c554a9b5d83f41192337fb8328215'
     plugins:
       - 'pdf_view'
+  - name: 'ckanext-pages'
+    repo: 'ckan/ckanext-pages'
+    version: "dbb3399d6143d67b46d346fcddd858e6a4cd44a0"
+    plugins:
+      - 'pages'
