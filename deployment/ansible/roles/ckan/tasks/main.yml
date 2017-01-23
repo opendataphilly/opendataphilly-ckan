@@ -31,6 +31,7 @@
       - iotop
       - libapache2-mod-wsgi
       - libffi-dev
+      - libssl-dev
       - libpq5
       - nginx
       - postgresql
@@ -39,6 +40,7 @@
       - python-psycopg2
       - python-pycurl
       - python-software-properties
+      - python-dev
       - screen
       - solr-jetty
       - sudo
@@ -69,6 +71,10 @@
 
   - name: Set CKAN site_url
     lineinfile: 'dest={{ ckan_config_path }} regexp=ckan.site_url line="ckan.site_url = {{ ckan_site_url }}"'
+
+  - name: Install pip packages not covered by dependencies
+    pip: name={{ item.name }} version={{ item.version }} virtualenv={{ ckan_virtualenv_path }}
+    with_items: ckan_pip_dependencies
 
 
   # Jetty & Solr
