@@ -76,6 +76,17 @@
     pip: name={{ item.name }} version={{ item.version }} virtualenv={{ ckan_virtualenv_path }}
     with_items: ckan_pip_dependencies
 
+  - name: Install simple plugins into ckan virtualenv
+    command: "{{ ckan_virtualenv_path }}/bin/pip install -e git+https://github.com/{{ item.repo }}.git@{{ item.version }}#egg={{ item.name }}"
+    with_items: ckan_simple_plugins
+
+  - name: Add simple plugins to CKAN plugin list
+    lineinfile: dest="{{ ckan_config_path }}" regexp="^ckan.plugins(((?!{{ item.1 }}).)*)$" line="ckan.plugins\1 {{item.1 }}" backrefs=yes
+    notify: Restart Apache
+    with_subelements:
+      - ckan_simple_plugins
+      - plugins
+
 
   # Jetty & Solr
   - name: Set Jetty to start on boot

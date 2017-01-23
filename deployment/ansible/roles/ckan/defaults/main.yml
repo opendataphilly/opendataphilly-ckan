@@ -3,10 +3,18 @@ db_name: ckan_default
 db_user: ckan_default
 db_password: ckan_default
 ckan_package_filename: 'python-ckan_2.6-trusty_amd64.deb'
+
+# The config and virtualenv are installed by the CKAN package
 ckan_config_path: "/etc/ckan/default/production.ini"
-# Installed by the CKAN package, used by plugin roles
 ckan_virtualenv_path: "/usr/lib/ckan/default/"
 
 ckan_pip_dependencies:
   - { name: 'urllib3[secure]', version: '1.19.1' }
   - { name: 'requests[security]', version: '2.10.0' }
+
+ckan_simple_plugins:
+  - name: 'ckanext-pdfview'
+    repo: 'ckan/ckanext-pdfview'
+    version: '99c48f31d72c554a9b5d83f41192337fb8328215'
+    plugins:
+      - 'pdf_view'
