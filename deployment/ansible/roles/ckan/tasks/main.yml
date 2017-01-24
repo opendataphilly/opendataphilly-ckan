@@ -30,6 +30,7 @@
       - iftop
       - iotop
       - libapache2-mod-wsgi
+      - libffi-dev
       - libpq5
       - nginx
       - postgresql
@@ -89,7 +90,7 @@
     notify: Restart Jetty
 
   - name: Set CKAN Solr server address
-    lineinfile: 'dest=/etc/ckan/default/production.ini regexp=solr_url line=solr_url=http://127.0.0.1:8983/solr'
+    lineinfile: 'dest={{ ckan_config_path }} regexp=solr_url line=solr_url=http://127.0.0.1:8983/solr'
 
   # Postgres
   - name: Ensure CKAN database is created
@@ -105,7 +106,7 @@
     sudo_user: postgres
 
   - name: Set CKAN database server address
-    lineinfile: 'dest=/etc/ckan/default/production.ini regexp=sqlalchemy.url line="sqlalchemy.url = postgresql://{{ db_user }}:{{ db_password }}@localhost/{{ db_name }}?sslmode=disable"'
+    lineinfile: 'dest={{ ckan_config_path }} regexp=sqlalchemy.url line="sqlalchemy.url = postgresql://{{ db_user }}:{{ db_password }}@localhost/{{ db_name }}?sslmode=disable"'
 
   - name: Ensure database is initialised
     command: ckan db init
@@ -134,10 +135,10 @@
     sudo_user: postgres
 
   - name: Set DataStore database server write address
-    lineinfile: 'dest=/etc/ckan/default/production.ini regexp="ckan.datastore.write_url" line="ckan.datastore.write_url = postgresql://ckan_default:{{ db_password }}@localhost/datastore_default"'
+    lineinfile: 'dest={{ ckan_config_path }} regexp="ckan.datastore.write_url" line="ckan.datastore.write_url = postgresql://ckan_default:{{ db_password }}@localhost/datastore_default"'
 
   - name: Set DataStore database server read address
-    lineinfile: 'dest=/etc/ckan/default/production.ini regexp="ckan.datastore.read_url" line="ckan.datastore.read_url = postgresql://datastore_default:{{ db_password }}@localhost/datastore_default"'
+    lineinfile: 'dest={{ ckan_config_path }} regexp="ckan.datastore.read_url" line="ckan.datastore.read_url = postgresql://datastore_default:{{ db_password }}@localhost/datastore_default"'
 
   - name: Set DataStore database permissions
     command: ckan datastore set-permissions postgres
@@ -147,7 +148,7 @@
     file: path=/var/lib/ckan/default owner=www-data state=directory
 
   - name: Set FileStore directory path
-    lineinfile: 'dest=/etc/ckan/default/production.ini regexp="ckan.storage_path" line="ckan.storage_path = /var/lib/ckan/default"'
+    lineinfile: 'dest={{ ckan_config_path }} regexp="ckan.storage_path" line="ckan.storage_path = /var/lib/ckan/default"'
 
   - name: Ensure Apache can write to FileStore directory
     acl: name=/var/lib/ckan/default entity=www-data etype=user permissions=u+rwx
