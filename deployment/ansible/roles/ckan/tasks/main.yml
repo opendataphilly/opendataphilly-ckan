@@ -52,10 +52,10 @@
 #      lineinfile: 'dest=/etc/sudoers regexp="sudo ALL=NOPASSWD: ALL" line="%sudo ALL=NOPASSWD: ALL" state=present'
 
   - name: Download CKAN package
-    get_url: 'url="http://packaging.ckan.org/{{ ckan_package_filename }}" dest=/tmp/{{ ckan_package_filename }}'
+    get_url: 'url="http://packaging.ckan.org/{{ ckan_package_filename }}" dest={{ ckan_package_dir }}/{{ ckan_package_filename }}'
 
   - name:  Install CKAN package
-    command: 'dpkg --skip-same-version -i /tmp/{{ ckan_package_filename }}'
+    command: 'dpkg --skip-same-version -i {{ ckan_package_dir }}/{{ ckan_package_filename }}'
     # http://stackoverflow.com/questions/19127493/in-ansible-how-do-you-prevent-a-dpkg-installation-task-to-notify-a-changed-stat
     register: ckan_installed
     changed_when: "'already installed' not in ckan_installed.stderr"

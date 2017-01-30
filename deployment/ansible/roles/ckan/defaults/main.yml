@@ -2,6 +2,7 @@
 db_name: ckan_default
 db_user: ckan_default
 db_password: ckan_default
+ckan_package_dir: '/tmp'
 ckan_package_filename: 'python-ckan_2.6-trusty_amd64.deb'
 
 # The config and virtualenv are installed by the CKAN package
