@@ -24,3 +24,8 @@ ckan_simple_plugins:
     version: 'fefd941267d2c4f2551656b52af5b5fe601a7882'
     plugins:
       - 'highlight-related-items'
+  - name: 'ckanext-pdfview'
+    repo: 'ckan/ckanext-pdfview'
+    version: '99c48f31d72c554a9b5d83f41192337fb8328215'
+    plugins:
+      - 'pdf_view'
