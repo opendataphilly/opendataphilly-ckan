@@ -19,3 +19,8 @@ ckan_simple_plugins:
     version: 'b48dbc34c78659e03d4a05c6735bfa96cedb454f'
     plugins:
       - 'pages'
+  - name: 'highlight-related-items'
+    repo: 'CityOfPhiladelphia/ckanext-highlight-related-items'
+    version: 'fefd941267d2c4f2551656b52af5b5fe601a7882'
+    plugins:
+      - 'highlight-related-items'
