@@ -12,3 +12,10 @@ ckan_virtualenv_path: "/usr/lib/ckan/default/"
 ckan_pip_dependencies:
   - { name: 'urllib3[secure]', version: '1.19.1' }
   - { name: 'requests[security]', version: '2.10.0' }
+
+ckan_simple_plugins:
+  - name: 'ckanext-pages'
+    repo: 'ckan/ckanext-pages'
+    version: 'b48dbc34c78659e03d4a05c6735bfa96cedb454f'
+    plugins:
+      - 'pages'
