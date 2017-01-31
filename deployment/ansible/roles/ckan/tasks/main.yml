@@ -30,6 +30,8 @@
       - iftop
       - iotop
       - libapache2-mod-wsgi
+      - libffi-dev
+      - libssl-dev
       - libpq5
       - nginx
       - postgresql
@@ -38,6 +40,7 @@
       - python-psycopg2
       - python-pycurl
       - python-software-properties
+      - python-dev
       - screen
       - solr-jetty
       - sudo
@@ -49,10 +52,10 @@
 #      lineinfile: 'dest=/etc/sudoers regexp="sudo ALL=NOPASSWD: ALL" line="%sudo ALL=NOPASSWD: ALL" state=present'
 
   - name: Download CKAN package
-    get_url: 'url="http://packaging.ckan.org/{{ ckan_package_filename }}" dest=/tmp/{{ ckan_package_filename }}'
+    get_url: 'url="http://packaging.ckan.org/{{ ckan_package_filename }}" dest={{ ckan_package_dir }}/{{ ckan_package_filename }}'
 
   - name:  Install CKAN package
-    command: 'dpkg --skip-same-version -i /tmp/{{ ckan_package_filename }}'
+    command: 'dpkg --skip-same-version -i {{ ckan_package_dir }}/{{ ckan_package_filename }}'
     # http://stackoverflow.com/questions/19127493/in-ansible-how-do-you-prevent-a-dpkg-installation-task-to-notify-a-changed-stat
     register: ckan_installed
     changed_when: "'already installed' not in ckan_installed.stderr"
@@ -66,6 +69,25 @@
         - /var/lib/ckan/default/storage
         - /var/lib/ckan/default/storage/uploads
 
+  - name: Set CKAN site_url
+    lineinfile: 'dest={{ ckan_config_path }} regexp=ckan.site_url line="ckan.site_url = {{ ckan_site_url }}"'
+
+  - name: Install pip packages not covered by dependencies
+    pip: name={{ item.name }} version={{ item.version }} virtualenv={{ ckan_virtualenv_path }}
+    with_items: ckan_pip_dependencies
+
+  - name: Install simple plugins into ckan virtualenv
+    command: "{{ ckan_virtualenv_path }}/bin/pip install -e git+https://github.com/{{ item.repo }}.git@{{ item.version }}#egg={{ item.name }}"
+    with_items: ckan_simple_plugins
+
+  - name: Add simple plugins to CKAN plugin list
+    lineinfile: dest="{{ ckan_config_path }}" regexp="^ckan.plugins(((?!{{ item.1 }}).)*)$" line="ckan.plugins\1 {{item.1 }}" backrefs=yes
+    notify: Restart Apache
+    with_subelements:
+      - ckan_simple_plugins
+      - plugins
+
+
   # Jetty & Solr
   - name: Set Jetty to start on boot
     lineinfile: 'dest=/etc/default/jetty regexp=^NO_START line="NO_START=0"'
@@ -77,7 +99,7 @@
     lineinfile: 'dest=/etc/default/jetty regexp=^JETTY_PORT line="JETTY_PORT=8983"'
 
   - name: Set Jetty to use system java
-    lineinfile: 'dest=/etc/default/jetty regexp=JAVA_HOME line="JAVA_HOME=/usr/lib/jvm/java-6-openjdk-amd64/"'
+    lineinfile: 'dest=/etc/default/jetty regexp=JAVA_HOME line="JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/"'
     notify: Start Jetty
 
   - name: Remove CKAN schema file
@@ -89,7 +111,7 @@
     notify: Restart Jetty
 
   - name: Set CKAN Solr server address
-    lineinfile: 'dest=/etc/ckan/default/production.ini regexp=solr_url line=solr_url=http://127.0.0.1:8983/solr'
+    lineinfile: 'dest={{ ckan_config_path }} regexp=solr_url line=solr_url=http://127.0.0.1:8983/solr'
 
   # Postgres
   - name: Ensure CKAN database is created
@@ -105,7 +127,7 @@
     sudo_user: postgres
 
   - name: Set CKAN database server address
-    lineinfile: 'dest=/etc/ckan/default/production.ini regexp=sqlalchemy.url line="sqlalchemy.url = postgresql://{{ db_user }}:{{ db_password }}@localhost/{{ db_name }}?sslmode=disable"'
+    lineinfile: 'dest={{ ckan_config_path }} regexp=sqlalchemy.url line="sqlalchemy.url = postgresql://{{ db_user }}:{{ db_password }}@localhost/{{ db_name }}?sslmode=disable"'
 
   - name: Ensure database is initialised
     command: ckan db init
@@ -134,20 +156,20 @@
     sudo_user: postgres
 
   - name: Set DataStore database server write address
-    lineinfile: 'dest=/etc/ckan/default/production.ini regexp="ckan.datastore.write_url" line="ckan.datastore.write_url = postgresql://ckan_default:{{ db_password }}@localhost/datastore_default"'
+    lineinfile: 'dest={{ ckan_config_path }} regexp="ckan.datastore.write_url" line="ckan.datastore.write_url = postgresql://ckan_default:{{ db_password }}@localhost/datastore_default"'
 
   - name: Set DataStore database server read address
-    lineinfile: 'dest=/etc/ckan/default/production.ini regexp="ckan.datastore.read_url" line="ckan.datastore.read_url = postgresql://datastore_default:{{ db_password }}@localhost/datastore_default"'
+    lineinfile: 'dest={{ ckan_config_path }} regexp="ckan.datastore.read_url" line="ckan.datastore.read_url = postgresql://datastore_default:{{ db_password }}@localhost/datastore_default"'
 
   - name: Set DataStore database permissions
-    command: ckan datastore set-permissions postgres
+    shell: ckan datastore set-permissions | sudo -u postgres psql --set ON_ERROR_STOP=1
 
   # FileStore
   - name: Ensure FileStore directory exists
     file: path=/var/lib/ckan/default owner=www-data state=directory
 
   - name: Set FileStore directory path
-    lineinfile: 'dest=/etc/ckan/default/production.ini regexp="ckan.storage_path" line="ckan.storage_path = /var/lib/ckan/default"'
+    lineinfile: 'dest={{ ckan_config_path }} regexp="ckan.storage_path" line="ckan.storage_path = /var/lib/ckan/default"'
 
   - name: Ensure Apache can write to FileStore directory
     acl: name=/var/lib/ckan/default entity=www-data etype=user permissions=u+rwx

@@ -1,8 +1,0 @@
----
-# Using the ansible pip module here results in breakage
-- name: Install ckanext-pages into ckan virtualenv
-  command: "{{ ckan_virtualenv_path }}/bin/pip install -e git+https://github.com/ckan/ckanext-pages.git@{{ ckanext_pages_version }}#egg=ckanext-pages"
-
-- name: Add self to CKAN plugin list
-  lineinfile: dest="{{ ckan_config_path }}" regexp="^ckan.plugins(((?!pages).)*)$" line="ckan.plugins\1 pages" backrefs=yes
-  notify: Restart Apache

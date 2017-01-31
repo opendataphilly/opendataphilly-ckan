@@ -11,4 +11,4 @@
 - name: Add Google Analytics configuration
   lineinfile: dest="{{ ckan_config_path }}" regexp="googleanalytics\.id" line="googleanalytics.id = {{ googleanalytics_id }}" insertafter="ckan\.plugins"
   notify: Restart Apache
-  when: googleanalytics_id
+  when: googleanalytics_id is defined and googleanalytics_id != ''

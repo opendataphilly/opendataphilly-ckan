@@ -1,4 +1,2 @@
 ---
-ckan_virtualenv_path: "/usr/lib/ckan/default/"
-ckanext_deadoralive_version: "212cafd5934ac8186022822a5591deef9e70c2b8"
-ckan_config_path: "/etc/ckan/default/production.ini"
+ckanext_deadoralive_version: "37a9942ff9e7606b59bb04c35226c2f58c4b5883"

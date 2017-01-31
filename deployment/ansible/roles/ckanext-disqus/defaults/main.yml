@@ -1,4 +1,2 @@
 ---
-ckan_virtualenv_path: "/usr/lib/ckan/default/"
-ckanext_disqus_version: "cf7af9ac5be5e6ff77e5f59541a0f699ef43e14b"
-ckan_config_path: "/etc/ckan/default/production.ini"
+ckanext_disqus_version: "709566b439df6a9cf45708c773c18a71b141f3ef"

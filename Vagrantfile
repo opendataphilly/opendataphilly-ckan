@@ -1,67 +1,67 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
-VAGRANTFILE_API_VERSION = "2"
+Vagrant.require_version ">= 1.6"
 
-Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  # All Vagrant configuration is done here. The most common configuration
-  # options are documented and commented below. For a complete reference,
-  # please see the online documentation at vagrantup.com.
+require "yaml"
 
-  # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "ubuntu/precise64"
+# Deserialize Ansible Galaxy installation metadata for a role
+def galaxy_install_info(role_name)
+  role_path = File.join("deployment", "ansible", "roles", role_name)
+  galaxy_install_info = File.join(role_path, "meta", ".galaxy_install_info")
 
-  # The url from where the 'config.vm.box' box will be fetched if it
-  # doesn't already exist on the user's system.
-  config.vm.box_url = "http://cloud-images.ubuntu.com/vagrant/precise/current/precise-server-cloudimg-amd64-vagrant-disk1.box"
+  if (File.directory?(role_path) || File.symlink?(role_path)) && File.exists?(galaxy_install_info)
+    YAML.load_file(galaxy_install_info)
+  else
+    { install_date: "", version: "0.0.0" }
+  end
+end
 
-  # Disable automatic box update checking. If you disable this, then
-  # boxes will only be checked for updates when the user runs
-  # `vagrant box outdated`. This is not recommended.
-  # config.vm.box_check_update = false
+# Uses the contents of roles.yml to ensure that ansible-galaxy is run
+# if any dependencies are missing
+def install_dependent_roles
+  ansible_directory = File.join("deployment", "ansible")
+  ansible_roles_spec = File.join(ansible_directory, "roles.yml")
 
-  # Create a forwarded port mapping which allows access to a specific port
-  # within the machine from a port on the host machine. In the example below,
-  # accessing "localhost:8080" will access port 80 on the guest machine.
+  YAML.load_file(ansible_roles_spec).each do |role|
+    role_name = role["src"]
+    role_version = role["version"]
+    role_path = File.join(ansible_directory, "roles", role_name)
+    galaxy_metadata = galaxy_install_info(role_name)
+
+    if galaxy_metadata["version"] != role_version.strip
+      unless system("ansible-galaxy install -f -r #{ansible_roles_spec} -p #{File.dirname(role_path)}")
+        $stderr.puts "\nERROR: An attempt to install Ansible role dependencies failed."
+        exit(1)
+      end
+
+      break
+    end
+  end
+end
+
+# Install missing role dependencies based on the contents of roles.yml
+if [ "up", "provision" ].include?(ARGV.first)
+  install_dependent_roles
+end
+
+Vagrant.configure(2) do |config|
+  config.vm.box = "ubuntu/trusty64"
+
+  config.vm.provider :virtualbox do |vb|
+    vb.memory = 1024
+  end
+
   config.vm.network "forwarded_port", guest: 8080, host: 8025
+  config.vm.network "private_network", ip: "192.168.8.85"
 
-  # Create a private network, which allows host-only access to the machine
-  # using a specific IP.
-  config.vm.network "private_network", ip: "192.168.8.25"
-
-  # Create a public network, which generally matched to bridged network.
-  # Bridged networks make the machine appear as another physical device on
-  # your network.
-  # config.vm.network "public_network"
-
-  # If true, then any SSH connections made will enable agent forwarding.
-  # Default value: false
-  # config.ssh.forward_agent = true
-
-  # Share an additional folder to the guest VM. The first argument is
-  # the path on the host to the actual folder. The second argument is
-  # the path on the guest to mount the folder. And the optional third
-  # argument is a set of non-required options.
   config.vm.synced_folder "../ckanext-odp_theme", "/vagrant_ckanext-odp_theme", nfs: true
   config.vm.synced_folder "../ckanext-datajson", "/vagrant_ckanext-datajson", nfs: true
 
   config.vm.provision :ansible do |ansible|
     ansible.playbook = "deployment/ansible/site.yml"
-    # Note: If running vagrant < 1.3.0 you may need to change this to ansible.inventory_file
     ansible.verbose = 'v'
     ansible.inventory_path = "deployment/ansible/hosts/hosts.vagrant"
     ansible.limit = 'all'
   end
-# Provider-specific configuration so you can fine-tune various
-  # backing providers for Vagrant. These expose provider-specific options.
-  # Example for VirtualBox:
-  #
-  config.vm.provider "virtualbox" do |vb|
-    vb.customize ["modifyvm", :id, "--memory", "1024"]
-  end
-  #
-  # View the documentation for the provider you're using for more
-  # information on available options.
-
 end

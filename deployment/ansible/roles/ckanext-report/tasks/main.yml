@@ -1,0 +1,7 @@
+---
+- name: Install ckanext-report into ckan virtualenv
+  command: "{{ ckan_virtualenv_path }}/bin/pip install -e git+http://github.com/datagovuk/ckanext-report.git@{{ ckanext_report_version }}#egg=ckanext-report"
+
+- name: Add self to CKAN plugin list
+  lineinfile: dest="{{ ckan_config_path }}" regexp="^ckan.plugins(((?!report).)*)$" line="ckan.plugins\1 report" backrefs=yes
+  notify: Restart Apache

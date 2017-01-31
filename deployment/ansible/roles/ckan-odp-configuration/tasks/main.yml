@@ -62,7 +62,6 @@
       - datapusher
       - resource_proxy
       - recline_preview
-      - pdf_preview
       - text_preview
     notify: Restart Apache
 
