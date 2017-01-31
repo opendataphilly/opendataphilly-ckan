@@ -24,3 +24,8 @@ ckan_simple_plugins:
     version: "dbb3399d6143d67b46d346fcddd858e6a4cd44a0"
     plugins:
       - 'pages'
+  - name: 'ckanext-showcase'
+    repo: 'ckan/ckanext-showcase'
+    version: '92c9b2b7d4cc07b68eeb77587a832cb3c7607daa'
+    plugins:
+      - 'showcase'
