@@ -167,7 +167,9 @@
 
   # Simple plugins
   - name: Install simple plugins into ckan virtualenv
-    command: "{{ ckan_virtualenv_path }}/bin/pip install -e git+https://github.com/{{ item.repo }}.git@{{ item.version }}#egg={{ item.name }}"
+    pip:
+      name: "git+https://github.com/{{ item.repo }}.git@{{ item.version }}#egg={{ item.name }}"
+      virtualenv: "{{ ckan_virtualenv_path }}"
     with_items: ckan_simple_plugins
 
   - name: Add simple plugins to CKAN plugin list
