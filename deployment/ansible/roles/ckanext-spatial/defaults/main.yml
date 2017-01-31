@@ -1,4 +1,4 @@
 ---
-ckanext_spatial_version: "da2e1100ed9600b0b8b2ceffbadc4f966e71274f"
+ckanext_spatial_version: "5040caee85f91da9aac891a01d9d9e85ba9b307e"
 ckanext_spatial_url: "https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg"
 ckanext_spatial_attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
