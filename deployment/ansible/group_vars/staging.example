@@ -4,8 +4,6 @@ ckan_disqus_shortname: ENTER_SHORTNAME_HERE
 #ckan_disqus_public_key: ""
 #ckan_disqus_secret_key: ""
 ckan_production: True
-python_version: 2.7.3-0ubuntu2.2
-pip_version: 1.0-1build1
 ckan_site_url: http://localhost:80/
 ckan_deadoralive_apikey: CHANGE_THIS
 #ckan_smtp_mail_from:
