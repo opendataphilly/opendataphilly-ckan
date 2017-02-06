@@ -1,8 +1,5 @@
 # Adapted from https://gist.github.com/jeffbr13/08751e42c9355cc44f5d
 ---
-  - name: Update apt cache
-    apt: update_cache=yes
-
   - name: Upgrade all safe packages
     apt: upgrade=safe
 

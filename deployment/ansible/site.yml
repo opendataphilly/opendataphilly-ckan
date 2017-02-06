@@ -1,6 +1,12 @@
 ---
 - hosts: vagrant
+
   sudo: True
+
+  pre_tasks:
+    - name: Update APT cache
+      apt: update_cache=yes
+
   roles:
     - { role: "ckan" }
     - { role: "ckanext-archiver" }
