@@ -1,5 +1,5 @@
 ---
-ckanext_issues_version: "6e90ff95a30356c6550f988d1a6a124a3092486c"
+ckanext_issues_version: "1a91e25bff2d10b320d55332a721106190069aae"
 ckanext_issues_notify_admin: True
 ckanext_issues_notify_owner: True
 ckanext_issues_from_address: "ckan-test@localhost.local"

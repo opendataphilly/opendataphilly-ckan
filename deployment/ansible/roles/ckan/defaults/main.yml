@@ -3,7 +3,7 @@ db_name: ckan_default
 db_user: ckan_default
 db_password: ckan_default
 ckan_package_dir: '/tmp'
-ckan_package_filename: 'python-ckan_2.2-trusty_amd64.deb'
+ckan_package_filename: 'python-ckan_2.3-trusty_amd64.deb'
 
 # The config and virtualenv are installed by the CKAN package
 ckan_config_path: "/etc/ckan/default/production.ini"
@@ -16,7 +16,7 @@ ckan_pip_dependencies:
 ckan_simple_plugins:
   - name: 'ckanext-pages'
     repo: 'ckan/ckanext-pages'
-    version: 'b48dbc34c78659e03d4a05c6735bfa96cedb454f'
+    version: 'dbb3399d6143d67b46d346fcddd858e6a4cd44a0'
     plugins:
       - 'pages'
   - name: 'highlight-related-items'
@@ -24,3 +24,8 @@ ckan_simple_plugins:
     version: 'fefd941267d2c4f2551656b52af5b5fe601a7882'
     plugins:
       - 'highlight-related-items'
+  - name: 'ckanext-pdfview'
+    repo: 'ckan/ckanext-pdfview'
+    version: '99c48f31d72c554a9b5d83f41192337fb8328215'
+    plugins:
+      - 'pdf_view'
