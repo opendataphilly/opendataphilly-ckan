@@ -1,4 +1,0 @@
----
-ckan_virtualenv_path: "/usr/lib/ckan/default/"
-ckanext_pages_version: "b48dbc34c78659e03d4a05c6735bfa96cedb454f"
-ckan_config_path: "/etc/ckan/default/production.ini"

@@ -1,0 +1,7 @@
+---
+dependencies:
+  - { role: "azavea.virtualenv" }
+  - { role: "azavea.git" }
+  - { role: "azavea.python" }
+  - { role: "azavea.pip" }
+  - { role: "azavea.postgresql" }

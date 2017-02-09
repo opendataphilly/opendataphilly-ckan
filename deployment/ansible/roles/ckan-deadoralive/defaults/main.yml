@@ -1,6 +1,4 @@
 ---
 ckan_site_url: "http://localhost:8080/"
-ckan_virtualenv_path: "/usr/lib/ckan/default/"
 ckan_deadoralive_version: "29327db812c36f7e400f45a44ebe96674cc8ebf9"
-ckan_config_path: "/etc/ckan/default/production.ini"
 ckan_deadoralive_apikey: 'CHANGE_THIS'

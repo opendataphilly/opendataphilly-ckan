@@ -1,6 +1,12 @@
 ---
 - hosts: vagrant
+
   sudo: True
+
+  pre_tasks:
+    - name: Update APT cache
+      apt: update_cache=yes
+
   roles:
     - { role: "ckan" }
     - { role: "ckanext-archiver" }
@@ -12,7 +18,6 @@
     - { role: "ckanext-datajson" }
     - { role: "ckan-deadoralive" }
     - { role: "ckanext-odp_theme" }
-    - { role: "ckanext-pages" }
     - { role: "ckanext-googleanalytics" }
     - { role: "odp-importer" }
     - { role: "ckan-odp-configuration" }
