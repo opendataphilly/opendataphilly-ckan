@@ -106,14 +106,24 @@
 
 # SSL/TLS
   - name: Copy SSL/TLS private key
-    copy: src=certs/{{ ckan_ssl_key }} dest=/etc/ssl/private/{{ ckan_ssl_key }}
+    copy: src=certs/{{ ckan_ssl_key }} dest=/etc/letsencrypt/live/opendataphilly.org/{{ ckan_ssl_key }}
           mode="0600"
+    force: no
     when: ckan_ssl_key is defined
 
   - name: Copy SSL/TLS certificate
-    copy: src=certs/{{ ckan_ssl_cert }} dest=/etc/ssl/certs/{{ ckan_ssl_cert }}
+    copy: src=certs/{{ ckan_ssl_cert }} dest=/etc/letsencrypt/live/opendataphilly.org/{{ ckan_ssl_cert }}
           mode="0644"
+    force: no
     when: ckan_ssl_cert is defined
+
+  - name: Download certbot
+    get_url: 'url="https://dl.eff.org/certbot-auto" dest=/usr/local/bin/certbot-auto'
+    mode: '0755'
+
+  - name: Add Let's Encrypt auto-renewal to cron
+    cron: job="certbot-auto renew --quiet --no-self-upgrade" minute="31" hour="*/12"
+          name="Renew Let's Encrypt cert"
 
   - name: Copy Nginx Configuration
     template: src=nginx_ckan.j2
