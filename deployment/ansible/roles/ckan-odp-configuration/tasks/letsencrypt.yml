@@ -1,0 +1,23 @@
+---
+
+- name: Download certbot
+  get_url: url=https://dl.eff.org/certbot-auto
+           dest=/usr/local/bin/certbot-auto
+           mode=0755 owner=root group=root
+
+- name: Set up certbot
+  command: "certbot-auto certonly --webroot
+              -w /usr/lib/ckan/default/src/ckanext-odp-theme/ckanext/odp_theme/public
+              {% for domain in letsencrypt_domains %}
+              -d {{ domain }}
+              {% endfor %} -n --agree-tos
+              --email {{ letsencrypt_email }}"
+  args:
+    creates: "/etc/letsencrypt/renewal/{{ letsencrypt_domains[0] }}.conf"
+
+- cron:
+    name: "Renew Let's Encrypt Certificate"
+    minute: 0
+    hour: 23
+    day: 25
+    job: "certbot-auto renew --quiet --no-self-upgrade && service nginx reload"

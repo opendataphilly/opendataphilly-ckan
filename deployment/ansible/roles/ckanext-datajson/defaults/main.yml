@@ -1,4 +1,4 @@
 ---
-ckanext_datajson_version: "azavea-workaround"
+ckanext_datajson_version: "feature/azavea-workaround"
 ckan_wsgi_path: "/etc/ckan/default/apache.wsgi"
 vagrant_ckanext_datajson_mountpoint: "/vagrant_ckanext-datajson"

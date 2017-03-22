@@ -17,3 +17,5 @@ ckan_deadoralive_apikey: CHANGE_THIS
 #googleanalytics_id: ""
 #ckan_ssl_key: "odp.key"
 #ckan_ssl_cert: "odp.crt"
+#letsencrypt_domains: [ 'domain.com', 'www.domain.com' ]
+#letsencrypt_email: 'email@email.com'

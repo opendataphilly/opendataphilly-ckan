@@ -8,9 +8,9 @@
       apt: update_cache=yes
 
   roles:
+    - { role: "azavea.postgresql" }
     - { role: "ckan" }
     - { role: "ckanext-archiver" }
-    - { role: "ckanext-qa" }
     - { role: "ckanext-disqus" }
     - { role: "ckanext-issues" }
     - { role: "ckanext-spatial" }

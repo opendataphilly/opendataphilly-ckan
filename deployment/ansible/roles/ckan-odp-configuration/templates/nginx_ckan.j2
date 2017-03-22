@@ -8,8 +8,13 @@ server {
 
 server {
     listen 443 ssl;
+    {% if letsencrypt_domains is defined %}
+    ssl_certificate /etc/letsencrypt/live/{{ letsencrypt_domains[0] }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ letsencrypt_domains[0] }}/privkey.pem;
+    {% else %}
     ssl_certificate /etc/ssl/certs/{{ ckan_ssl_cert | default('ssl-cert-snakeoil.pem') }};
     ssl_certificate_key /etc/ssl/private/{{ ckan_ssl_key | default('ssl-cert-snakeoil.key') }};
+    {% endif %}
     client_max_body_size 100M;
     location / {
         proxy_pass http://127.0.0.1:8080/;

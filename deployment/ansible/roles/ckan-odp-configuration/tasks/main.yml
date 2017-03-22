@@ -104,6 +104,11 @@
     cron: job="{{ ckan_database_backup_script }}" special_time=daily
           name="Backup database"
 
+  - stat:
+      path: /etc/letsencrypt/live/{{ letsencrypt_domains[0] }}/fullchain.pem
+    register: letsencrypt_stat
+    when: letsencrypt_domains is defined
+
 # SSL/TLS
   - name: Copy SSL/TLS private key
     copy: src=certs/{{ ckan_ssl_key }} dest=/etc/ssl/private/{{ ckan_ssl_key }}
@@ -120,3 +125,7 @@
               dest=/etc/nginx/sites-available/ckan
               mode="0644"
     notify: Restart Nginx
+
+# Lets encrypt
+  - include: letsencrypt.yml
+    when: letsencrypt_domains is defined
