@@ -5,6 +5,6 @@
 
 - name: Add deadoraive to cron
   cron: name="deadoralive Link Checker"
-        special_time=hourly
+        minute=*/10
         job="{{ ckan_virtualenv_path }}/bin/deadoralive --url {{ ckan_site_url }} --apikey {{ ckan_deadoralive_apikey }}"
   when: ckan_deadoralive_apikey != 'CHANGE_THIS'
