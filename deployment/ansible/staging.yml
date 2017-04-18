@@ -13,9 +13,7 @@
     - { role: "ckanext-disqus" }
     - { role: "ckanext-issues" }
     - { role: "ckanext-spatial" }
-    - { role: "ckanext-deadoralive" }
     - { role: "ckanext-datajson" }
-    - { role: "ckan-deadoralive" }
     - { role: "ckanext-odp_theme" }
     - { role: "ckanext-googleanalytics" }
     - { role: "ckan-odp-configuration" }
