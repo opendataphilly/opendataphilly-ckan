@@ -14,9 +14,10 @@
     - { role: "ckanext-disqus" }
     - { role: "ckanext-issues" }
     - { role: "ckanext-spatial" }
-    - { role: "ckanext-deadoralive" }
+# deadoralive disabled until false positive issues are worked out
+#    - { role: "ckanext-deadoralive" }
     - { role: "ckanext-datajson" }
-    - { role: "ckan-deadoralive" }
+#    - { role: "ckan-deadoralive" }
     - { role: "ckanext-odp_theme" }
     - { role: "ckanext-googleanalytics" }
     - { role: "odp-importer" }
