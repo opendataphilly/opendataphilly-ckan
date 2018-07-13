@@ -11,6 +11,8 @@ ckan_config_path: "/etc/ckan/default/production.ini"
 ckan_virtualenv_path: "/usr/lib/ckan/default/"
 
 ckan_pip_dependencies:
+  - { name: 'setuptools', version: '40.0.0'}
+  - { name: 'wheel', version: '0.31.1'}
   - { name: 'urllib3[secure]', version: '1.19.1' }
   - { name: 'requests[security]', version: '2.10.0' }
 

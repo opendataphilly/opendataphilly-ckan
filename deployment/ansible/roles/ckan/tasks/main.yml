@@ -66,10 +66,11 @@
         - /var/lib/ckan/default/storage
         - /var/lib/ckan/default/storage/uploads
 
-  - name: Create pip.conf in virtualenv to suppress version warning
-    template: src=pip.conf.j2
-              dest={{ ckan_virtualenv_path }}/pip.conf
-              mode="0755"
+  - name: Upgrade pip in the virtualenv that's included with CKAN
+    pip:
+      name: 'pip'
+      version: '{{ pip_version }}'
+      virtualenv: '{{ ckan_virtualenv_path }}'
 
   - name: Install pip packages not covered by dependencies
     pip: name={{ item.name }} version={{ item.version }} virtualenv={{ ckan_virtualenv_path }}
