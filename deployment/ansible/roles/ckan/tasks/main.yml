@@ -95,7 +95,7 @@
     when: ckan_installed.changed
 
   - name: Ensure CKAN uses provided schema file
-    file: path=/etc/solr/conf/schema.xml src=/usr/lib/ckan/default/src/ckan/ckan/config/solr/schema.xml state=link
+    file: path=/etc/solr/conf/schema.xml src=/usr/lib/ckan/default/src/ckan/ckan/config/solr/schema.xml state=link force=yes
     notify: Restart Jetty
 
   - name: Set CKAN Solr server address
