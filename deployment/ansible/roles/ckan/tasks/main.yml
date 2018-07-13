@@ -103,17 +103,17 @@
   # Postgres
   - name: Ensure CKAN database is created
     postgresql_db: 'name={{ db_name }}'
-    sudo_user: postgres
+    become_user: postgres
     when: db_host == 'localhost'
 
   - name: Ensure CKAN database user can access CKAN database
     postgresql_user: 'db={{ db_name }} name={{ db_user }} password={{ db_password }} priv=ALL'
-    sudo_user: postgres
+    become_user: postgres
     when: db_host == 'localhost'
 
   - name: Minimise CKAN database user privileges
     postgresql_user: 'name={{ db_user }} role_attr_flags=NOSUPERUSER,NOCREATEROLE,NOCREATEDB'
-    sudo_user: postgres
+    become_user: postgres
     when: db_host == 'localhost'
 
   - name: Set CKAN database server address
@@ -136,17 +136,17 @@
 # DataStore
   - name: Ensure DataStore database exists
     postgresql_db: name=datastore_default owner=ckan_default
-    sudo_user: postgres
+    become_user: postgres
     when: db_host == 'localhost'
 
   - name: Ensure CKAN database user owns DataStore database
     postgresql_user: 'db=datastore_default name=ckan_default password={{ db_password }} priv=ALL'
-    sudo_user: postgres
+    become_user: postgres
     when: db_host == 'localhost'
 
   - name: Ensure DataStore database user exists
     postgresql_user: 'name=datastore_default password={{ db_password }}'
-    sudo_user: postgres
+    become_user: postgres
     when: db_host == 'localhost'
 
   - name: Set DataStore database server write address
