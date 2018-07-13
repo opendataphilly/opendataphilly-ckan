@@ -20,5 +20,4 @@
 #    - { role: "ckan-deadoralive" }
     - { role: "ckanext-odp_theme" }
     - { role: "ckanext-googleanalytics" }
-    - { role: "odp-importer" }
     - { role: "ckan-odp-configuration" }
