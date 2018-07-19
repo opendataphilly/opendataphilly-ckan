@@ -1,7 +1,7 @@
 ---
 - hosts: vagrant
 
-  sudo: True
+  become: True
 
   pre_tasks:
     - name: Update APT cache
@@ -20,5 +20,4 @@
 #    - { role: "ckan-deadoralive" }
     - { role: "ckanext-odp_theme" }
     - { role: "ckanext-googleanalytics" }
-    - { role: "odp-importer" }
     - { role: "ckan-odp-configuration" }

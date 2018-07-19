@@ -4,7 +4,7 @@
     apt: upgrade=safe
 
   - name: Install unattended upgrades (Debian/Ubuntu only)
-    apt: pkg=unattended-upgrades state=installed
+    apt: pkg=unattended-upgrades state=present
     when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
   - name: 'Make sure unattended-upgrades only installs from $ubuntu_release-security'
@@ -12,7 +12,7 @@
     when: ansible_distribution == 'Ubuntu'
 
   - name: Install necessities and nice-to-haves
-    apt: pkg={{ item }} state=installed
+    apt: pkg={{ item }} state=present
     with_items:
       - acl
       - apache2
@@ -66,10 +66,11 @@
         - /var/lib/ckan/default/storage
         - /var/lib/ckan/default/storage/uploads
 
-  - name: Create pip.conf in virtualenv to suppress version warning
-    template: src=pip.conf.j2
-              dest={{ ckan_virtualenv_path }}/pip.conf
-              mode="0755"
+  - name: Upgrade pip in the virtualenv that's included with CKAN
+    pip:
+      name: 'pip'
+      version: '{{ pip_version }}'
+      virtualenv: '{{ ckan_virtualenv_path }}'
 
   - name: Install pip packages not covered by dependencies
     pip: name={{ item.name }} version={{ item.version }} virtualenv={{ ckan_virtualenv_path }}
@@ -94,7 +95,7 @@
     when: ckan_installed.changed
 
   - name: Ensure CKAN uses provided schema file
-    file: path=/etc/solr/conf/schema.xml src=/usr/lib/ckan/default/src/ckan/ckan/config/solr/schema.xml state=link
+    file: path=/etc/solr/conf/schema.xml src=/usr/lib/ckan/default/src/ckan/ckan/config/solr/schema.xml state=link force=yes
     notify: Restart Jetty
 
   - name: Set CKAN Solr server address
@@ -103,17 +104,17 @@
   # Postgres
   - name: Ensure CKAN database is created
     postgresql_db: 'name={{ db_name }}'
-    sudo_user: postgres
+    become_user: postgres
     when: db_host == 'localhost'
 
   - name: Ensure CKAN database user can access CKAN database
     postgresql_user: 'db={{ db_name }} name={{ db_user }} password={{ db_password }} priv=ALL'
-    sudo_user: postgres
+    become_user: postgres
     when: db_host == 'localhost'
 
   - name: Minimise CKAN database user privileges
     postgresql_user: 'name={{ db_user }} role_attr_flags=NOSUPERUSER,NOCREATEROLE,NOCREATEDB'
-    sudo_user: postgres
+    become_user: postgres
     when: db_host == 'localhost'
 
   - name: Set CKAN database server address
@@ -136,17 +137,17 @@
 # DataStore
   - name: Ensure DataStore database exists
     postgresql_db: name=datastore_default owner=ckan_default
-    sudo_user: postgres
+    become_user: postgres
     when: db_host == 'localhost'
 
   - name: Ensure CKAN database user owns DataStore database
     postgresql_user: 'db=datastore_default name=ckan_default password={{ db_password }} priv=ALL'
-    sudo_user: postgres
+    become_user: postgres
     when: db_host == 'localhost'
 
   - name: Ensure DataStore database user exists
     postgresql_user: 'name=datastore_default password={{ db_password }}'
-    sudo_user: postgres
+    become_user: postgres
     when: db_host == 'localhost'
 
   - name: Set DataStore database server write address
