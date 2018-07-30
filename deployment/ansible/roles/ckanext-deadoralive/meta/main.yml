@@ -1,6 +1,0 @@
----
-dependencies:
-  - { role: "ckan" }
-  - { role: "azavea.virtualenv" }
-  - { role: "azavea.git" }
-  - { role: "azavea.pip" }

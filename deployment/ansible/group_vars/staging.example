@@ -5,7 +5,6 @@ ckan_disqus_shortname: ENTER_SHORTNAME_HERE
 #ckan_disqus_secret_key: ""
 ckan_production: True
 ckan_site_url: http://localhost:80/
-ckan_deadoralive_apikey: CHANGE_THIS
 #ckan_smtp_mail_from:
 #ckan_smtp_user:
 #ckan_smtp_server:
