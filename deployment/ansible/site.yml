@@ -10,7 +10,6 @@
   roles:
     - { role: "azavea.postgresql" }
     - { role: "ckan" }
-    - { role: "ckanext-archiver" }
     - { role: "ckanext-disqus" }
     - { role: "ckanext-issues" }
     - { role: "ckanext-spatial" }

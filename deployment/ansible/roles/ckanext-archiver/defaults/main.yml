@@ -1,7 +1,0 @@
----
-# For whatever reason ckanext-archiver doesn't install its dependencies from
-# setup.py (it used to but they changed it). If a newer version is used, make
-# sure to update requirements.txt in this role's files directory with the
-# requirements.txt from the new version.
-ckanext_archiver_version: "de57522441bae34984f8f15186d1cd95481e0acf"
-archiver_requirements_path: "/tmp/ckanext-archiver-requirements.txt"
