@@ -1,4 +1,0 @@
----
-# Using the ansible pip module here results in breakage
-- name: Install ckanext-harvest into ckan virtualenv
-  command: "{{ ckan_virtualenv_path }}/bin/pip install -e git+https://github.com/ckan/ckanext-harvest.git@{{ ckanext_harvest_version }}#egg=ckanext-harvest"
