@@ -10,7 +10,6 @@
   roles:
     - { role: "ckan" }
     - { role: "ckanext-disqus" }
-    - { role: "ckanext-issues" }
     - { role: "ckanext-spatial" }
     - { role: "ckanext-datajson" }
     - { role: "ckanext-odp_theme" }
