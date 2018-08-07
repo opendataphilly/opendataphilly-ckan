@@ -2,6 +2,20 @@
 ckan_disqus_shortname: ENTER_SHORTNAME_HERE
 ckan_site_url: http://localhost:8080/
 ckan_production: false
+ckan_repo_url: https://github.com/ckan/ckan
+db_name: ckan_default
+db_user: ckan_default
+db_password: ckan_default
+datastore_user: datastore_default
+datastore_db: datastore_default
+db_host: database.service.opendataphilly.internal
+postgresql_listen_addresses: "{{ db_host }}, localhost"
+postgresql_hba_mapping:
+  - type: host
+    database: "all"
+    user: "all"
+    address: "192.168.8.1/24"
+    method: md5
 #ckan_smtp_mail_from:
 #ckan_smtp_user:
 #ckan_smtp_server:

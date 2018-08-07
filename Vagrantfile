@@ -5,6 +5,11 @@ Vagrant.require_version ">= 1.6"
 
 require "yaml"
 
+unless Vagrant.has_plugin?("vagrant-hostmanager")
+  $stderr.puts "\nERROR: vagrant-hostmanager not found; please run `vagrant plugin install vagrant-hostmanager`"
+  exit(1)
+end
+
 # Deserialize Ansible Galaxy installation metadata for a role
 def galaxy_install_info(role_name)
   role_path = File.join("deployment", "ansible", "roles", role_name)
@@ -52,15 +57,36 @@ Vagrant.configure(2) do |config|
     vb.memory = 1024
   end
 
-  config.vm.network "forwarded_port", guest: 8080, host: 8025
-  config.vm.network "private_network", ip: "192.168.8.85"
+  config.hostmanager.enabled = true
+  config.hostmanager.manage_host = false
+  config.hostmanager.ignore_private_ip = false
+  config.hostmanager.include_offline = true
 
-  config.vm.synced_folder "../ckanext-odp_theme", "/vagrant_ckanext-odp_theme", nfs: true
+  config.vm.define "database" do |database|
+    database.vm.network "private_network", ip: "192.168.8.84"
+    database.vm.hostname = 'database'
+    database.hostmanager.aliases = %w(database.service.opendataphilly.internal)
 
-  config.vm.provision :ansible do |ansible|
-    ansible.playbook = "deployment/ansible/site.yml"
-    ansible.verbose = 'v'
-    ansible.inventory_path = "deployment/ansible/hosts/hosts.vagrant"
-    ansible.limit = 'all'
+    database.vm.provision :ansible do |ansible|
+      ansible.playbook = "deployment/ansible/database.yml"
+      ansible.verbose = 'v'
+      ansible.inventory_path = "deployment/ansible/hosts/hosts.vagrant"
+      ansible.limit = 'database'
+    end
+  end
+
+  config.vm.define "app" do |app|
+    app.vm.network "forwarded_port", guest: 8080, host: 8025
+    app.vm.network "private_network", ip: "192.168.8.85"
+    app.vm.hostname = "app"
+
+    app.vm.synced_folder "../ckanext-odp_theme", "/vagrant_ckanext-odp_theme", nfs: true
+
+    app.vm.provision :ansible do |ansible|
+      ansible.playbook = "deployment/ansible/app.yml"
+      ansible.verbose = 'v'
+      ansible.inventory_path = "deployment/ansible/hosts/hosts.vagrant"
+      ansible.limit = 'app'
+    end
   end
 end

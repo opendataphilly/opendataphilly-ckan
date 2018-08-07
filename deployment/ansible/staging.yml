@@ -8,7 +8,7 @@
       apt: update_cache=yes
 
   roles:
-    - { role: "ckan" }
+    - { role: "ckan.app" }
     - { role: "ckanext-disqus" }
     - { role: "ckanext-spatial" }
     - { role: "ckanext-datajson" }

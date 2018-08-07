@@ -1,10 +1,5 @@
 ---
-db_name: ckan_default
-db_user: ckan_default
-db_password: ckan_default
-db_host: localhost
-ckan_package_dir: '/tmp'
-ckan_package_filename: 'python-ckan_2.2-trusty_amd64.deb'
+ckan_package_filename: 'python-ckan_{{ ckan_version }}-trusty_amd64.deb'
 
 # The config and virtualenv are installed by the CKAN package
 ckan_config_path: "/etc/ckan/default/production.ini"
