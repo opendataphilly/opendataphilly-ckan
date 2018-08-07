@@ -19,10 +19,10 @@ Development Installation
 4. Run `vagrant up`; once the Ansible provisioner finishes, CKAN will be available at http://localhost:8025
 5. Creating a sysadmin user:
 ```
-  vagrant ssh
-  . /usr/lib/ckan/default/bin/activate
-  cd /usr/lib/ckan/default/src/ckan
-  paster sysadmin add <USERNAME> -c /etc/ckan/default/production.ini
+  $ vagrant ssh app
+  vagrant@app:~$ . /usr/lib/ckan/default/bin/activate
+  vagrant@app:~$ cd /usr/lib/ckan/default/src/ckan
+  vagrant@app:~$ ckan/ paster sysadmin add <USERNAME> -c /etc/ckan/default/production.ini
 ```
 
 Deployment

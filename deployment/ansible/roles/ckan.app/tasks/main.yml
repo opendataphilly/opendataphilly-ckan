@@ -31,7 +31,6 @@
       - libssl-dev
       - libpq5
       - nginx
-      - postgresql
       - python
       - python-pip
       - python-psycopg2
@@ -102,30 +101,15 @@
     lineinfile: 'dest={{ ckan_config_path }} regexp=solr_url line=solr_url=http://127.0.0.1:8983/solr'
 
   # Postgres
-  - name: Ensure CKAN database is created
-    postgresql_db: 'name={{ db_name }}'
-    become_user: postgres
-    when: db_host == 'localhost'
-
-  - name: Ensure CKAN database user can access CKAN database
-    postgresql_user: 'db={{ db_name }} name={{ db_user }} password={{ db_password }} priv=ALL'
-    become_user: postgres
-    when: db_host == 'localhost'
-
-  - name: Minimise CKAN database user privileges
-    postgresql_user: 'name={{ db_user }} role_attr_flags=NOSUPERUSER,NOCREATEROLE,NOCREATEDB'
-    become_user: postgres
-    when: db_host == 'localhost'
-
   - name: Set CKAN database server address
     lineinfile: 'dest={{ ckan_config_path }} regexp=sqlalchemy.url line="sqlalchemy.url = postgresql://{{ db_user }}:{{ db_password }}@{{ db_host }}/{{ db_name }}?sslmode=disable"'
 
   - name: Ensure database is initialised
     command: ckan db init
-    when: db_host == 'localhost'
     notify:
       - Restart Apache
       - Restart Nginx
+    when: not ckan_production
 
   - name: Remove Repoze.who configuration file for CKAN
     file: path=/usr/lib/ckan/default/src/ckan/who.ini state=absent
@@ -135,31 +119,11 @@
     file: 'path=/usr/lib/ckan/default/src/ckan/who.ini src=/etc/ckan/default/who.ini state=link'
 
 # DataStore
-  - name: Ensure DataStore database exists
-    postgresql_db: name=datastore_default owner=ckan_default
-    become_user: postgres
-    when: db_host == 'localhost'
-
-  - name: Ensure CKAN database user owns DataStore database
-    postgresql_user: 'db=datastore_default name=ckan_default password={{ db_password }} priv=ALL'
-    become_user: postgres
-    when: db_host == 'localhost'
-
-  - name: Ensure DataStore database user exists
-    postgresql_user: 'name=datastore_default password={{ db_password }}'
-    become_user: postgres
-    when: db_host == 'localhost'
-
   - name: Set DataStore database server write address
-    lineinfile: 'dest={{ ckan_config_path }} regexp="ckan.datastore.write_url" line="ckan.datastore.write_url = postgresql://ckan_default:{{ db_password }}@{{ db_host }}/datastore_default"'
+    lineinfile: 'dest={{ ckan_config_path }} regexp="ckan.datastore.write_url" line="ckan.datastore.write_url = postgresql://{{ db_user }}:{{ db_password }}@{{ db_host }}/{{ datastore_db }}"'
 
   - name: Set DataStore database server read address
-    lineinfile: 'dest={{ ckan_config_path }} regexp="ckan.datastore.read_url" line="ckan.datastore.read_url = postgresql://datastore_default:{{ db_password }}@{{ db_host }}/datastore_default"'
-
-  - name: Set DataStore database permissions
-    command: ckan datastore set-permissions postgres
-    when: db_host == 'localhost'
-
+    lineinfile: 'dest={{ ckan_config_path }} regexp="ckan.datastore.read_url" line="ckan.datastore.read_url = postgresql://{{ datastore_user }}:{{ db_password }}@{{ db_host }}/{{ datastore_db }}"'
 
   # FileStore
   - name: Ensure FileStore directory exists
