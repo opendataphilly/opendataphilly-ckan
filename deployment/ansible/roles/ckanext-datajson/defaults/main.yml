@@ -1,4 +1,4 @@
 ---
-ckanext_datajson_version: "feature/azavea-workaround"
+# This was the latest commit on the datagov branch as of 2018-08-08
+ckanext_datajson_version: "3205ba3f9af9c3"
 ckan_wsgi_path: "/etc/ckan/default/apache.wsgi"
-vagrant_ckanext_datajson_mountpoint: "/vagrant_ckanext-datajson"

@@ -56,7 +56,6 @@ Vagrant.configure(2) do |config|
   config.vm.network "private_network", ip: "192.168.8.85"
 
   config.vm.synced_folder "../ckanext-odp_theme", "/vagrant_ckanext-odp_theme", nfs: true
-  config.vm.synced_folder "../ckanext-datajson", "/vagrant_ckanext-datajson", nfs: true
 
   config.vm.provision :ansible do |ansible|
     ansible.playbook = "deployment/ansible/site.yml"
