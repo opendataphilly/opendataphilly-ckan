@@ -37,6 +37,7 @@
       - python-pycurl
       - python-software-properties
       - python-dev
+      - redis-server
       - screen
       - solr-jetty
       - sudo
@@ -100,30 +101,13 @@
   - name: Set CKAN Solr server address
     lineinfile: 'dest={{ ckan_config_path }} regexp=solr_url line=solr_url=http://127.0.0.1:8983/solr'
 
-  # Postgres
-  - name: Set CKAN database server address
-    lineinfile: 'dest={{ ckan_config_path }} regexp=sqlalchemy.url line="sqlalchemy.url = postgresql://{{ db_user }}:{{ db_password }}@{{ db_host }}/{{ db_name }}?sslmode=disable"'
-
-  - name: Ensure database is initialised
-    command: ckan db init
-    notify:
-      - Restart Apache
-      - Restart Nginx
-    when: not ckan_production
-
+  # Repoze.who
   - name: Remove Repoze.who configuration file for CKAN
     file: path=/usr/lib/ckan/default/src/ckan/who.ini state=absent
     when: ckan_installed.changed
 
   - name: Link Repoze.who configuration file for CKAN
     file: 'path=/usr/lib/ckan/default/src/ckan/who.ini src=/etc/ckan/default/who.ini state=link'
-
-# DataStore
-  - name: Set DataStore database server write address
-    lineinfile: 'dest={{ ckan_config_path }} regexp="ckan.datastore.write_url" line="ckan.datastore.write_url = postgresql://{{ db_user }}:{{ db_password }}@{{ db_host }}/{{ datastore_db }}"'
-
-  - name: Set DataStore database server read address
-    lineinfile: 'dest={{ ckan_config_path }} regexp="ckan.datastore.read_url" line="ckan.datastore.read_url = postgresql://{{ datastore_user }}:{{ db_password }}@{{ db_host }}/{{ datastore_db }}"'
 
   # FileStore
   - name: Ensure FileStore directory exists

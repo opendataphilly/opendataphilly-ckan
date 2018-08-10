@@ -62,7 +62,6 @@
       - datapusher
       - resource_proxy
       - recline_preview
-      - pdf_preview
       - text_preview
     notify: Restart Apache
 
@@ -75,6 +74,25 @@
       - csv
       - xls
 
+  # DataStore config
+  - name: Set DataStore database server write address
+    lineinfile: 'dest={{ ckan_config_path }} regexp="ckan.datastore.write_url" line="ckan.datastore.write_url = postgresql://{{ db_user }}:{{ db_password }}@{{ db_host }}/{{ datastore_db }}"'
+
+  - name: Set DataStore database server read address
+    lineinfile: 'dest={{ ckan_config_path }} regexp="ckan.datastore.read_url" line="ckan.datastore.read_url = postgresql://{{ datastore_user }}:{{ db_password }}@{{ db_host }}/{{ datastore_db }}"'
+
+  # Database initialization
+  - name: Set CKAN database server address
+    lineinfile: 'dest={{ ckan_config_path }} regexp=sqlalchemy.url line="sqlalchemy.url = postgresql://{{ db_user }}:{{ db_password }}@{{ db_host }}/{{ db_name }}?sslmode=disable"'
+
+  - name: Ensure database is initialised
+    command: ckan db init
+    notify:
+      - Restart Apache
+      - Restart Nginx
+    when: not ckan_production
+
+  # Email and backups
   - name: Add email sending crontab
     cron: job="echo '{}' | /usr/lib/ckan/default/bin/paster --plugin=ckan post -c {{ ckan_config_path }} /api/action/send_email_notifications > /dev/null"
           name="Send Email Notifications"
