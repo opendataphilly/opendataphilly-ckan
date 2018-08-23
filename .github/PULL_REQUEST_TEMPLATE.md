@@ -21,6 +21,9 @@ Optional. Ancillary topics, caveats, alternative strategies that didn't work out
  * Include any setup required, such as bundling scripts, restarting services, etc.
  * Include test case and expected output
 
+## Checklist
+
+- [ ] Manual upgrade steps added to [UPGRADING_2.2_TO_2.8.md](UPGRADING_2.2_TO_2.8.md)?
 
 Resolves #XXX
 
