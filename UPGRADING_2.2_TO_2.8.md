@@ -52,6 +52,49 @@ DROP TABLE IF EXISTS ckanext_unpublished_comments;
 COMMIT;
 ```
 
+### Migrate the related extension
+
+- Bring up an app EC2 based on the `one-off/mvm/migrate-related-to-showcase` branch, which has CKAN 2.5 and the `ckanext-showcase` plugin installed
+- Run the following SQL queries to rename duplicate titles:
+  ```sql
+  BEGIN;
+
+  UPDATE related SET title=trim(title);
+
+  WITH renamed AS
+  (
+    SELECT
+      id,
+      CASE WHEN (count(*) OVER (PARTITION BY title)) > 1 THEN
+        title || ' (' || row_number() OVER (PARTITION BY title ORDER BY id) || ')'
+      ELSE
+        title
+      END AS title
+    FROM related
+  )
+  UPDATE related
+  SET title=renamed.title
+  FROM renamed
+  WHERE related.id=renamed.id;
+
+  COMMIT;
+  ```
+- Migrate to the showcase plugin
+  ```
+  sudo su
+  cd /usr/lib/ckan/default/src/ckanext-showcase/
+  ckan showcase migrate
+  ```
+- Drop the `related` tables:
+  ```sql
+  BEGIN;
+
+  DROP TABLE related;
+  DROP TABLE related_dataset;
+
+  COMMIT;
+  ```
+
 ### Migrate the database
 
 - Shut down Apache to avoid contention

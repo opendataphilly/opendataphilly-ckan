@@ -25,3 +25,9 @@ ckan_simple_plugins:
       - 'pdf_view'
     default_views:
       - 'pdf_view'
+  - name: 'ckanext-showcase'
+    repo: 'ckan/ckanext-showcase'
+    version: '87a7a6e1d3566edae615613f705b3b83bef75281'
+    plugins:
+      - 'showcase'
+    default_views: []
