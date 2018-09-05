@@ -12,13 +12,8 @@ ckan_pip_dependencies:
   - { name: 'requests[security]', version: '2.10.0' }
 
 ckan_simple_plugins:
-  - name: 'ckanext-pages'
-    repo: 'ckan/ckanext-pages'
-    version: '8b0d555027f1d4ab47291da57a806e617343a6c0'
+  - name: 'ckanext-showcase'
+    repo: 'ckan/ckanext-showcase'
+    version: '87a7a6e1d3566edae615613f705b3b83bef75281'
     plugins:
-      - 'pages'
-  - name: 'highlight-related-items'
-    repo: 'CityOfPhiladelphia/ckanext-highlight-related-items'
-    version: 'fefd941267d2c4f2551656b52af5b5fe601a7882'
-    plugins:
-      - 'highlight-related-items'
+      - 'showcase'
