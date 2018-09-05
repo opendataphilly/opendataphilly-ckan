@@ -22,3 +22,8 @@ ckan_simple_plugins:
     version: 'fefd941267d2c4f2551656b52af5b5fe601a7882'
     plugins:
       - 'highlight-related-items'
+  - name: 'ckanext-showcase'
+    repo: 'ckan/ckanext-showcase'
+    version: '87a7a6e1d3566edae615613f705b3b83bef75281'
+    plugins:
+      - 'showcase'
