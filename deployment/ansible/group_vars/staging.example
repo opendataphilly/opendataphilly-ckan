@@ -1,8 +1,4 @@
 ---
-ckan_disqus_shortname: ENTER_SHORTNAME_HERE
-# Uncomment the following lines and add your public and secret keys to enable Disqus SSO
-#ckan_disqus_public_key: ""
-#ckan_disqus_secret_key: ""
 ckan_production: True
 ckan_site_url: http://localhost:80/
 #ckan_smtp_mail_from:

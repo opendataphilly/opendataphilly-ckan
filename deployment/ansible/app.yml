@@ -9,7 +9,6 @@
 
   roles:
     - { role: "ckan.app" }
-    # - { role: "ckanext-disqus" }
     # - { role: "ckanext-spatial" }
     - { role: "ckanext-datajson" }
     # - { role: "ckanext-odp_theme" }

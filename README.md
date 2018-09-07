@@ -15,7 +15,7 @@ Development Installation
 
 1. Make sure you have the development dependencies installed
 2. Clone the [ckanext-odp_theme](https://github.com/azavea/ckanext-odp_theme) repository to this directory's parent directory
-3. Copy `deployment/ansible/group_vars/vagrant.example` to `vagrant` and edit with your disqus shortname and e-mail credentials. If e-mail credentials are left unconfigured, e-mails will not be sent out.
+3. Copy `deployment/ansible/group_vars/vagrant.example` to `vagrant` and edit with your e-mail credentials. If e-mail credentials are left unconfigured, e-mails will not be sent out.
 4. Run `vagrant up`; once the Ansible provisioner finishes, CKAN will be available at http://localhost:8025
 5. Creating a sysadmin user:
 ```

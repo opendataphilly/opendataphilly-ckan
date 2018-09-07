@@ -1,5 +1,4 @@
 ---
-ckan_disqus_shortname: ENTER_SHORTNAME_HERE
 ckan_site_url: http://localhost:8025/
 ckan_production: false
 ckan_repo_url: https://github.com/ckan/ckan
