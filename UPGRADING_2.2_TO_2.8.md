@@ -24,6 +24,7 @@ in the command options.
 
 ### Remove tables for removed extensions
 
+#### `deadoralive` and `issues`
 Per [PR #73](https://github.com/azavea/opendataphilly-ckan/pull/73), the tables for the
 `deadoralive` and `issues` plugins should be removed.
 
@@ -38,6 +39,16 @@ DROP TABLE issue_category;
 DROP TABLE issue_comment;
 DROP TABLE issue;
 
+COMMIT;
+```
+
+#### Tables for the `unpublished_feedback` feature in `odb_theme`
+
+These were created by `ckanext-odp_theme` but not used, and now the feature has been removed.
+```sql
+BEGIN;
+DROP TABLE IF EXISTS ckanext_unpublished_feedback;
+DROP TABLE IF EXISTS ckanext_unpublished_comments;
 COMMIT;
 ```
 
