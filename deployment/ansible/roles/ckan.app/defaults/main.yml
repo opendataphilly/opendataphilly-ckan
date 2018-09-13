@@ -18,7 +18,7 @@ ckan_simple_plugins:
     plugins:
       - 'pages'
   - name: 'ckanext-showcase'
-    repo: 'ckan/ckanext-showcase'
-    version: '87a7a6e1d3566edae615613f705b3b83bef75281'
+    repo: 'azavea/ckanext-showcase'
+    version: 'ba15d2dc586faf788ffead76b1595ff82cdda7a9'
     plugins:
       - 'showcase'
