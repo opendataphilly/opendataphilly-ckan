@@ -131,3 +131,10 @@
     with_subelements:
       - "{{ ckan_simple_plugins }}"
       - plugins
+
+  - name: Add simple viewer plugins to default viewer CKAN list
+    lineinfile: dest="{{ ckan_config_path }}" regexp="^ckan.views.default_views(((?!{{ item.1 }}).)*)$" line="ckan.views.default_views\1 {{ item.1 }}" backrefs=yes
+    notify: Restart Apache
+    with_subelements:
+      - "{{ ckan_simple_plugins }}"
+      - default_views
