@@ -25,8 +25,9 @@ ckan_simple_plugins:
       - 'pdf_view'
     default_views:
       - 'pdf_view'
-  # - name: 'highlight-related-items'
-  #   repo: 'CityOfPhiladelphia/ckanext-highlight-related-items'
-  #   version: 'fefd941267d2c4f2551656b52af5b5fe601a7882'
-  #   plugins:
-  #     - 'highlight-related-items'
+  - name: 'ckanext-showcase'
+    repo: 'azavea/ckanext-showcase'
+    version: 'master'
+    plugins:
+      - 'showcase'
+    default_views: []
