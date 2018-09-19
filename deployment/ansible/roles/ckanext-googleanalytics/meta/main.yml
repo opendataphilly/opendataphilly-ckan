@@ -1,5 +1,0 @@
----
-dependencies:
-  - { role: "ckan.app" }
-  - { role: "azavea.virtualenv" }
-  - { role: "azavea.python" }

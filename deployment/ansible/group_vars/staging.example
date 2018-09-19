@@ -9,7 +9,6 @@ ckan_site_url: http://localhost:80/
 #db_backup_s3_access_key:
 #db_backup_s3_secret_key:
 #db_backup_s3_bucket:
-#googleanalytics_id: ""
 #ckan_ssl_key: "odp.key"
 #ckan_ssl_cert: "odp.crt"
 #letsencrypt_domains: [ 'domain.com', 'www.domain.com' ]
