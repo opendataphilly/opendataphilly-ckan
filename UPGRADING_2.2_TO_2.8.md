@@ -116,4 +116,5 @@ COMMIT;
   service apache2 restart
   service jetty restart
   ckan search-index rebuild -r
+  ckan views create -y
   ```

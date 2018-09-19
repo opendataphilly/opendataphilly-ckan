@@ -59,3 +59,8 @@ service apache2 start
 ```
 /usr/lib/ckan/default/bin/paster search-index rebuild --config=/etc/ckan/default/production.ini
 ```
+
+### Rebuild views
+```
+ckan views create -y
+```
