@@ -54,15 +54,64 @@ COMMIT;
 
 ### Migrate the database
 
-- Shut down Apache to avoid contention
+#### Migrate from the 'related' extension to 'showcase'
+
+- Bring up an `app` EC2 based on the `one-off/mvm/migrate-related-to-showcase` branch, which has CKAN 2.5 and the `ckanext-showcase` plugin installed.
+- On that instance, migrate the database **only** to migration #82 (the versions of migrations 83-85 on the 2.5 branch will cause problems later if you apply them):
   ```
-  service apache2 stop
+  ckan db upgrade 82
   ```
-- Migrate the database
+- Run the following SQL queries to rename duplicate titles:
+  ```sql
+  BEGIN;
+
+  UPDATE related SET title=trim(title);
+
+  WITH renamed AS
+  (
+    SELECT
+      id,
+      CASE WHEN (count(*) OVER (PARTITION BY title)) > 1 THEN
+        title || ' (' || row_number() OVER (PARTITION BY title ORDER BY id) || ')'
+      ELSE
+        title
+      END AS title
+    FROM related
+  )
+  UPDATE related
+  SET title=renamed.title
+  FROM renamed
+  WHERE related.id=renamed.id;
+
+  COMMIT;
   ```
-  ckan db upgrade -c /etc/ckan/default/production.ini
+- Migrate to the showcase plugin
   ```
-- Restart services
+  sudo su
+  cd /usr/lib/ckan/default/src/ckanext-showcase/
+  ckan showcase migrate
+  ```
+
+#### Apply remaining migrations
+
+- Bring up an `app` EC2 instance based on the branch to be released. You will not need the CKAN 2.5 instance any more.
+- Apply the remaining database migrations:
+  ```
+  ckan db upgrade
+  ```
+
+#### Drop the `related` tables
+  The tables for `related` must be kept until after migrations 83-86 have been applied. Once that's done, they can be removed:
+  ```sql
+  BEGIN;
+
+  DROP TABLE related_dataset;
+  DROP TABLE related;
+
+  COMMIT;
+  ```
+
+#### Restart services
   ```
   service apache2 restart
   service jetty restart
