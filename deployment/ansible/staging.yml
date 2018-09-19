@@ -12,5 +12,4 @@
     - { role: "ckanext-geoview" }
     - { role: "ckanext-datajson" }
     - { role: "ckanext-odp_theme" }
-    - { role: "ckanext-googleanalytics" }
     - { role: "ckan-odp-configuration" }
