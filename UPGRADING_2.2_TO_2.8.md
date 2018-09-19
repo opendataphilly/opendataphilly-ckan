@@ -118,3 +118,18 @@ COMMIT;
   ckan search-index rebuild -r
   ckan views create -y
   ```
+
+### Copy uploaded images to the new server instance
+
+Many of the images used on the site (such as the Topic icons and the Organization logo images)
+are stored as uploads.  The files are on the server's file system and the Topic and Organization
+entities in the database store just the filename. To preserve the images when upgrading, copy
+them from the old server instance to the new.
+
+The path is `/var/lib/ckan/default/storage/uploads/`.
+
+If the new server is accessible from outside, copying them directly should work, i.e.:
+```
+scp -r ubuntu@opendataphilly.org:/var/lib/ckan/default/storage/uploads \
+       NEW_USERNAME@NEW_SERVER:/var/lib/ckan/default/storage/
+```
