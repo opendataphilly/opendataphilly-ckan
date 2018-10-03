@@ -9,9 +9,4 @@
 
   roles:
     - { role: "ckan.app" }
-    - { role: "ckanext-disqus" }
-    - { role: "ckanext-spatial" }
-    - { role: "ckanext-datajson" }
-    - { role: "ckanext-odp_theme" }
-    - { role: "ckanext-googleanalytics" }
     - { role: "ckan-odp-configuration" }
