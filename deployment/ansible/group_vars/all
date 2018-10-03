@@ -1,4 +1,4 @@
 pip_version: '10.0.1'
 ckan_package_dir: '/tmp'
 ckan_version: '2.5'
-ckan_patch_version: '2.8.1'
+ckan_patch_version: '2.5.9'
