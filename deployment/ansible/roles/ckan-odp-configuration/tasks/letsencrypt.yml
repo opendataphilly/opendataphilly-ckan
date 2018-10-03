@@ -1,5 +1,16 @@
 ---
 
+- name: Copy temporary Nginx Configuration for LetsEncrypt
+  template: src=nginx_ckan_letsencrypt.j2
+            dest=/etc/nginx/sites-available/ckan
+            mode="0644"
+            
+- name: Restart Apache service
+  service: name=apache2 state=restarted            
+
+- name: Restart Nginx service
+  service: name=nginx state=restarted
+
 - name: Download certbot
   get_url: url=https://dl.eff.org/certbot-auto
            dest=/usr/local/bin/certbot-auto
