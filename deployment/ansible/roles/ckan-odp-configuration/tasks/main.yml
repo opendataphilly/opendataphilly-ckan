@@ -98,30 +98,6 @@
           name="Send Email Notifications"
           special_time=hourly
 
-  - name: Make sure database backup dir exists
-    file: path={{ ckan_database_backups }} state=directory
-
-  - name: Make sure s3cmd is installed
-    apt: name=s3cmd state=present
-    when: db_backup_s3_access_key is defined and
-          db_backup_s3_secret_key is defined
-
-  - name: Copy s3cmd config
-    template: src=s3cfg
-              dest={{ db_backup_s3cfg }}
-              mode="0400"
-    when: db_backup_s3_access_key is defined and
-          db_backup_s3_secret_key is defined
-
-  - name: Copy database backup script
-    template: src=backup.sh.j2
-              dest={{ ckan_database_backup_script }}
-              mode="0755"
-
-  - name: Add database backup crontab
-    cron: job="{{ ckan_database_backup_script }}" special_time=daily
-          name="Backup database"
-
   - stat:
       path: /etc/letsencrypt/live/{{ letsencrypt_domains[0] }}/fullchain.pem
     register: letsencrypt_stat
@@ -138,12 +114,12 @@
           mode="0644"
     when: ckan_ssl_cert is defined
 
+# Lets encrypt
+  - include: letsencrypt.yml
+    when: letsencrypt_domains is defined
+    
   - name: Copy Nginx Configuration
     template: src=nginx_ckan.j2
               dest=/etc/nginx/sites-available/ckan
               mode="0644"
     notify: Restart Nginx
-
-# Lets encrypt
-  - include: letsencrypt.yml
-    when: letsencrypt_domains is defined

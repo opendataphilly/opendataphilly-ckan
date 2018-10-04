@@ -123,13 +123,22 @@ COMMIT;
 
 Many of the images used on the site (such as the Topic icons and the Organization logo images)
 are stored as uploads.  The files are on the server's file system and the Topic and Organization
-entities in the database store just the filename. To preserve the images when upgrading, copy
-them from the old server instance to the new.
+entities in the database store just the filename. To preserve the images when upgrading, 
+make a local copy and push to the new server instance.
 
 The path is `/var/lib/ckan/default/storage/uploads/`.
 
-If the new server is accessible from outside, copying them directly should work, i.e.:
+Follow these instructions on your workstation:
+
+```bash
+$ scp -r ubuntu@opendataphilly.org:/var/lib/ckan/default/storage/uploads /tmp/uploads
+$ scp -r /tmp/uploads/ ubuntu@NEW_SERVER:~
 ```
-scp -r ubuntu@opendataphilly.org:/var/lib/ckan/default/storage/uploads \
-       NEW_USERNAME@NEW_SERVER:/var/lib/ckan/default/storage/
+
+Follow these instructions on the CKAN 2.8 instance:
+
+```bash
+$ cd ./uploads
+$ sudo mv * /var/lib/ckan/default/storage/uploads/
+$ sudo chown -R www-data:root /var/lib/ckan/default/storage/uploads/
 ```
