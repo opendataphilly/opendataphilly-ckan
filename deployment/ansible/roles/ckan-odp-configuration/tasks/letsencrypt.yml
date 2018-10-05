@@ -32,3 +32,9 @@
     hour: 23
     day: 25
     job: "certbot-auto renew --quiet --no-self-upgrade && service nginx reload"
+
+- name: Copy Nginx Configuration
+  template: src=nginx_ckan.j2
+            dest=/etc/nginx/sites-available/ckan
+            mode="0644"
+  notify: Restart Nginx
