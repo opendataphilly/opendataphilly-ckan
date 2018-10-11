@@ -1,0 +1,63 @@
+*.py[cod]
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64
+__pycache__
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+artifacts/
+.coverage
+.tox
+nosetests.xml
+.noseids
+
+# vagrant
+.vagrant
+
+# sass
+.sass-cache
+
+# Editor crap
+*.swp
+*.swo
+*~
+~*
+
+# OS X crap
+.DS_Store
+
+# ignore logs
+*.log
+
+# Ansible cruft
+*.retry
+
+# Ansible roles
+deployment/ansible/roles/azavea.*
+
+# ignore hosts.staging.example after adding host info
+deployment/ansible/hosts/hosts.staging
+
+# ignore group_vars after adding config options
+deployment/ansible/group_vars/staging
+deployment/ansible/group_vars/vagrant
+
+# users.json + created_accounts.csv
+odp_importer/users.json
+odp_importer/created_accounts.csv
+odp_importer/assign_reset_key.sql

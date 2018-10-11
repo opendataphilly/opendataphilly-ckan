@@ -1,0 +1,47 @@
+---
+ # Postgres
+  - name: Install dependencies
+    apt: name={{ item }} state=present
+    with_items:
+      - libpq5
+      - python-psycopg2
+      - python-dev
+    when: ansible_pkg_mgr == 'apt'
+
+  - name: Ensure CKAN database is created
+    postgresql_db: 'name={{ db_name }}'
+    become_user: postgres
+
+  - name: Ensure CKAN database user can access CKAN database
+    postgresql_user: 'db={{ db_name }} name={{ db_user }} password={{ db_password }} priv=ALL'
+    become_user: postgres
+
+  - name: Minimise CKAN database user privileges
+    postgresql_user: 'name={{ db_user }} role_attr_flags=NOSUPERUSER,NOCREATEROLE,NOCREATEDB'
+    become_user: postgres
+
+  - name: Ensure DataStore database exists
+    postgresql_db: 'name={{ datastore_db }} owner={{ db_user }}'
+    become_user: postgres
+
+  - name: Ensure CKAN database user owns DataStore database
+    postgresql_user: 'db={{ datastore_db }} name={{ db_user }} password={{ db_password }} priv=ALL'
+    become_user: postgres
+
+  - name: Ensure DataStore database user exists
+    postgresql_user: 'name={{ datastore_user }} password={{ db_password }}'
+    become_user: postgres
+
+# Configure Datastore
+  - name: Clone CKAN source
+    git:
+      repo: "{{ ckan_repo_url }}"
+      dest: "{{ ckan_package_dir }}/ckan"
+      depth: 1
+      version: "ckan-{{ ckan_patch_version }}"
+    register: clone_ckan_source
+
+  - name: Setup Datastore permissions
+    command: python datastore_setup.py {{ db_name | quote }} {{ datastore_db | quote }} {{ db_user | quote }} {{ db_user | quote }} {{ datastore_user | quote }} -p postgres
+             chdir="{{ ckan_package_dir }}/ckan/ckanext/datastore/bin"
+    when: clone_ckan_source.changed

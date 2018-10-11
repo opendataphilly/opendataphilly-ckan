@@ -1,0 +1,7 @@
+app ansible_host=192.168.8.85 ansible_ssh_user=vagrant
+database ansible_host=192.168.8.84 ansible_ssh_user=vagrant
+
+[vagrant]
+app
+database
+

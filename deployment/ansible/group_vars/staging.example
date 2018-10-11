@@ -1,0 +1,17 @@
+---
+ckan_production: True
+ckan_site_url: http://localhost:80/
+# ckan_smtp_mail_from:
+# ckan_smtp_user:
+# ckan_smtp_server:
+# ckan_smtp_starttls:
+# ckan_smtp_password:
+# ckan_ssl: false
+# db_name: ckan_default
+# db_user: ckan_default
+# db_password:
+# datastore_user: datastore_default
+# datastore_db: datastore_default
+# db_host:
+# letsencrypt_domains: [ 'domain.com', 'www.domain.com' ]
+# letsencrypt_email: 'email@email.com'

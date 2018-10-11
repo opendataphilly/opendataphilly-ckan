@@ -1,0 +1,5 @@
+---
+ckan_production: False
+ckanext_odp_theme_version: "develop"
+ckanext_odp_theme_local_src: "/vagrant_ckanext-odp_theme"
+vagrant_ckanext_odp_theme_mountpoint: "/vagrant_ckanext-odp_theme"

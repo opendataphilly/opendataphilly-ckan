@@ -1,0 +1,15 @@
+---
+- hosts: staging
+
+  become: True
+
+  pre_tasks:
+    - name: Update APT cache
+      apt: update_cache=yes
+
+  roles:
+    - { role: "ckan.app" }
+    - { role: "ckanext-geoview" }
+    - { role: "ckanext-datajson" }
+    - { role: "ckanext-odp_theme" }
+    - { role: "ckan-odp-configuration" }

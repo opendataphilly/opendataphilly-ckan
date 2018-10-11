@@ -1,0 +1,14 @@
+- src: azavea.pip
+  version: 1.0.1
+
+- src: azavea.python
+  version: 0.1.0
+
+- src: azavea.virtualenv
+  version: 0.1.0
+
+- src: azavea.git
+  version: 0.1.0
+
+- src: azavea.postgresql
+  version: 0.3.5

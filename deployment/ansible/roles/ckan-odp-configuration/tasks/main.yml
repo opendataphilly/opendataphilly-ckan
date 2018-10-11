@@ -1,0 +1,130 @@
+---
+ # Configuration
+  - name: Ensure anonymous users can't create datasets
+    lineinfile: 'dest=/etc/ckan/default/production.ini regexp="(ckan\.auth\.anon_create_dataset)" line="\1 = false" backrefs=yes'
+    notify: Restart Apache
+
+  - name: Ensure users can't create unowned datasets
+    lineinfile: 'dest=/etc/ckan/default/production.ini regexp="(ckan\.auth\.create_unowned_dataset)" line="\1 = false" backrefs=yes'
+    notify: Restart Apache
+
+  - name: Ensure users can't create datasets in orgs they are not a member of
+    lineinfile: 'dest=/etc/ckan/default/production.ini regexp="(ckan\.auth\.create_dataset_if_not_in_organization)" line="\1 = false" backrefs=yes'
+    notify: Restart Apache
+
+  - name: Ensure users can't create groups
+    lineinfile: 'dest=/etc/ckan/default/production.ini regexp="(ckan\.auth\.user_create_groups)" line="\1 = false" backrefs=yes'
+    notify: Restart Apache
+
+  - name: Ensure users can't create organizations
+    lineinfile: 'dest=/etc/ckan/default/production.ini regexp="(ckan\.auth\.user_create_organizations)" line="\1 = false" backrefs=yes'
+    notify: Restart Apache
+
+  - name: Ensure users can't delete groups
+    lineinfile: 'dest=/etc/ckan/default/production.ini regexp="(ckan\.auth\.user_delete_groups)" line="\1 = false" backrefs=yes'
+    notify: Restart Apache
+
+  - name: Ensure users can't delete organizations
+    lineinfile: 'dest=/etc/ckan/default/production.ini regexp="(ckan\.auth\.user_delete_organizations)" line="\1 = false" backrefs=yes'
+    notify: Restart Apache
+
+  - name: Ensure users can't be created via api
+    lineinfile: 'dest=/etc/ckan/default/production.ini regexp="(ckan\.auth\.create_user_via_api)" line="\1 = false" backrefs=yes'
+    notify: Restart Apache
+
+  - name: Ensure users can create themselves via web
+    lineinfile: 'dest=/etc/ckan/default/production.ini regexp="(ckan\.auth\.create_user_via_web)" line="\1 = true" backrefs=yes'
+    notify: Restart Apache
+
+  - name: Install licenses
+    copy: src=licenses.json dest={{ ckan_licenses }}
+
+  - name: Set config options
+    lineinfile: dest="{{ ckan_config_path }}" regexp="(^|\#){{ item.option }}" line="{{ item.option }} = {{ item.value }}" insertafter="ckan\.plugins"
+    with_items:
+      - { option: 'ckan.site_url', value: '{{ ckan_site_url }}' }
+      - { option: 'ckan.featured_groups', value: 'featured' }
+      - { option: 'ckan.datapusher.formats', value: 'csv xls' }
+      - { option: 'ckan.datapusher.url', value: 'http://127.0.0.1:8800' }
+      - { option: 'ckan.activity_streams_email_notifications', value: 'true'}
+      - { option: 'smtp.mail_from', value: "{{ ckan_smtp_mail_from }}" }
+      - { option: 'smtp.user', value: "{{ ckan_smtp_user }}" }
+      - { option: 'smtp.server', value: "{{ ckan_smtp_server }}" }
+      - { option: 'smtp.starttls', value: "{{ ckan_smtp_starttls }}" }
+      - { option: 'smtp.password', value: "{{ ckan_smtp_password }}" }
+      - { option: 'licenses_group_url', value: "file://{{ ckan_licenses }}"}
+    notify: Restart Apache
+
+  - name: Add plugins to ckan.plugins
+    lineinfile: dest="{{ ckan_config_path }}" regexp="^ckan.plugins(((?!{{ item }}).)*)$" line="ckan.plugins\1 {{ item }}" backrefs=yes
+    with_items:
+      - datastore
+      - datapusher
+      - resource_proxy
+      - recline_preview
+      - text_preview
+    notify: Restart Apache
+
+  - name: Add filetypes to ckan.preview.loadable
+    lineinfile: dest="{{ ckan_config_path }}" regexp="^ckan.preview.loadable(((?!{{ item }}).)*)$" line="ckan.preview.loadable\1 {{ item }}" backrefs=yes
+    notify: Restart Apache
+    with_items:
+      - pdf
+      - json
+      - csv
+      - xls
+
+  # DataStore config
+  - name: Set DataStore database server write address
+    lineinfile: 'dest={{ ckan_config_path }} regexp="ckan.datastore.write_url" line="ckan.datastore.write_url = postgresql://{{ db_user }}:{{ db_password }}@{{ db_host }}/{{ datastore_db }}"'
+
+  - name: Set DataStore database server read address
+    lineinfile: 'dest={{ ckan_config_path }} regexp="ckan.datastore.read_url" line="ckan.datastore.read_url = postgresql://{{ datastore_user }}:{{ db_password }}@{{ db_host }}/{{ datastore_db }}"'
+
+  # Database initialization
+  - name: Set CKAN database server address
+    lineinfile: 'dest={{ ckan_config_path }} regexp=sqlalchemy.url line="sqlalchemy.url = postgresql://{{ db_user }}:{{ db_password }}@{{ db_host }}/{{ db_name }}?sslmode=disable"'
+
+  - name: Ensure database is initialised
+    command: ckan db init
+    notify:
+      - Restart Apache
+      - Restart Nginx
+    when: not ckan_production
+
+  # Email and backups
+  - name: Add email sending crontab
+    cron: job="echo '{}' | /usr/lib/ckan/default/bin/paster --plugin=ckan post -c {{ ckan_config_path }} /api/action/send_email_notifications > /dev/null"
+          name="Send Email Notifications"
+          special_time=hourly
+
+  - stat:
+      path: /etc/letsencrypt/live/{{ letsencrypt_domains[0] }}/fullchain.pem
+    register: letsencrypt_stat
+    when: letsencrypt_domains is defined
+    tags: 
+      - letsencrypt
+
+# SSL/TLS
+  - name: Copy SSL/TLS private key
+    copy: src=certs/{{ ckan_ssl_key }} dest=/etc/ssl/private/{{ ckan_ssl_key }}
+          mode="0600"
+    when: ckan_ssl_key is defined
+
+  - name: Copy SSL/TLS certificate
+    copy: src=certs/{{ ckan_ssl_cert }} dest=/etc/ssl/certs/{{ ckan_ssl_cert }}
+          mode="0644"
+    when: ckan_ssl_cert is defined
+      
+  - name: Copy Nginx Configuration
+    template: src=nginx_ckan.j2
+              dest=/etc/nginx/sites-available/ckan
+              mode="0644"
+    notify: Restart Nginx
+    when: letsencrypt_domains is undefined
+
+# Lets encrypt
+  - include: letsencrypt.yml
+    when: letsencrypt_domains is defined
+    tags: 
+      - letsencrypt

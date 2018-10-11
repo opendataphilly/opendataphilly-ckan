@@ -1,0 +1,33 @@
+---
+ckan_package_filename: 'python-ckan_{{ ckan_version }}-trusty_amd64.deb'
+
+# The config and virtualenv are installed by the CKAN package
+ckan_config_path: "/etc/ckan/default/production.ini"
+ckan_virtualenv_path: "/usr/lib/ckan/default/"
+
+ckan_pip_dependencies:
+  - { name: 'setuptools', version: '40.0.0'}
+  - { name: 'wheel', version: '0.31.1'}
+  - { name: 'urllib3[secure]', version: '1.19.1' }
+  - { name: 'requests[security]', version: '2.10.0' }
+
+ckan_simple_plugins:
+  - name: 'ckanext-pages'
+    repo: 'ckan/ckanext-pages'
+    version: '8b0d555027f1d4ab47291da57a806e617343a6c0'
+    plugins:
+      - 'pages'
+    default_views: []
+  - name: 'ckanext-pdfview'
+    repo: 'ckan/ckanext-pdfview'
+    version: '99c48f31d72c554a9b5d83f41192337fb8328215'
+    plugins:
+      - 'pdf_view'
+    default_views:
+      - 'pdf_view'
+  - name: 'ckanext-showcase'
+    repo: 'azavea/ckanext-showcase'
+    version: 'master'
+    plugins:
+      - 'showcase'
+    default_views: []

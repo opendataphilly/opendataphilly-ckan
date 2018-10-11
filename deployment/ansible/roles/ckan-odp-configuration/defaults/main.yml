@@ -1,0 +1,9 @@
+---
+ckan_site_url: http://localhost:8080/
+ckan_smtp_mail_from: "opendataphilly@opendataphilly.org"
+ckan_smtp_user: ""
+ckan_smtp_server: ""
+ckan_smtp_starttls: "False"
+ckan_smtp_password: ""
+ckan_licenses: "/usr/local/share/licenses.json"
+ckan_ssl: True

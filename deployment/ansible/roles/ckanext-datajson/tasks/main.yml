@@ -1,0 +1,20 @@
+---
+# Using the ansible pip module here results in breakage
+- name: Uninstall ckanext-datajson from ckan virtualenv if it is already there
+  command: "{{ ckan_virtualenv_path }}/bin/pip uninstall ckanext-datajson"
+
+- name: Install ckanext-datajson into ckan virtualenv
+  command: "{{ ckan_virtualenv_path }}/bin/pip install -e git+https://github.com/GSA/ckanext-datajson.git@{{ ckanext_datajson_version }}#egg=ckanext-datajson"
+
+- name: Install datajson dependencies
+  command: "{{ ckan_virtualenv_path }}/bin/pip install -r {{ ckan_virtualenv_path}}/src/ckanext-datajson/requirements.txt"
+
+- name: Add workaround to apache.wsgi
+  lineinfile: dest={{ ckan_wsgi_path }}
+              line="import ckanext"
+              state=present
+              insertbefore="^from paste\.deploy"
+
+- name: Add self to CKAN plugin list
+  lineinfile: dest="{{ ckan_config_path }}" regexp="^ckan.plugins(((?!datajson).)*)$" line="ckan.plugins\1 datajson" backrefs=yes
+  notify: Restart Apache

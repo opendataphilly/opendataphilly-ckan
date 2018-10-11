@@ -1,0 +1,37 @@
+---
+# Using the ansible pip module here results in breakage
+- name: Install ckanext-odp_theme into ckan virtualenv
+  command: "{{ ckan_virtualenv_path }}/bin/pip install -e git+https://github.com/azavea/ckanext-odp_theme.git@{{ ckanext_odp_theme_version }}#egg=ckanext-odp_theme"
+  when: ckan_production
+
+- name: Symlink ckanext-odp_theme into ckan virtualenv
+  file: src={{ vagrant_ckanext_odp_theme_mountpoint }} dest={{ ckan_virtualenv_path }}/src/ckanext-odp-theme
+        state=link
+  when: not ckan_production
+
+- name: Run setup.py develop
+  command: "{{ ckan_virtualenv_path }}/bin/python setup.py develop
+            chdir={{ ckan_virtualenv_path }}/src/ckanext-odp-theme"
+  when: not ckan_production
+
+- name: Install SASS Compiler
+  apt: name=ruby-sass state=present
+
+- name: Compile SASS
+  command: "sass {{ ckan_virtualenv_path }}src/ckanext-odp-theme/ckanext/odp_theme/public/css/sass/main.scss {{ ckan_virtualenv_path }}src/ckanext-odp-theme/ckanext/odp_theme/public/css/main.css"
+
+- name: Set config options
+  lineinfile: dest="{{ ckan_config_path }}" regexp="(^|\#){{ item.option }}" line="{{ item.option }} = {{ item.value }}" insertafter="ckan\.plugins"
+  with_items:
+    - { option: 'ckan.site_title', value: 'OpenDataPhilly' }
+    - { option: 'ckan.favicon', value: '/img/favicon.png' }
+    - { option: 'ckan.site_logo', value: '/img/odp-logo.svg' }
+  notify: Restart Apache
+
+# Add to front of plugins list so our theme can override everything
+- name: Add self to CKAN plugin list
+  lineinfile: dest="{{ ckan_config_path }}"
+              regexp="^ckan.plugins \= (((?!odp_theme).)*)$"
+              line="ckan.plugins = odp_theme \1"
+              backrefs=yes
+  notify: Restart Apache

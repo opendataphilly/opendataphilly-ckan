@@ -1,0 +1,2 @@
+[staging]
+STAGING-ADDRESS-HERE    ansible_ssh_user=ubuntu
