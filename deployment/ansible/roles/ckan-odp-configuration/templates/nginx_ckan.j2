@@ -1,6 +1,11 @@
 proxy_cache_path /tmp/nginx_cache levels=1:2 keys_zone=cache:30m max_size=250m;
 proxy_temp_path /tmp/nginx_proxy 1 2;
 
+map $http_user_agent $limit_bots {
+    default 0;
+    ~*(semrush|mj12bot|ahrefs|webmeup) 1;
+}
+
 server {
     listen 80;
     return 301 {{ ckan_site_url }}$request_uri;
@@ -17,6 +22,9 @@ server {
     {% endif %}
     client_max_body_size 100M;
     location / {
+        if ($limit_bots = 1) {
+            return 403;
+        }
         proxy_pass http://127.0.0.1:8080/;
         proxy_set_header Host $host;
         proxy_cache cache;
