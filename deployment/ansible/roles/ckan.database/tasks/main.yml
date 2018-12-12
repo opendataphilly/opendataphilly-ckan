@@ -41,7 +41,11 @@
       version: "ckan-{{ ckan_patch_version }}"
     register: clone_ckan_source
 
-  - name: Setup Datastore permissions
-    command: python datastore_setup.py {{ db_name | quote }} {{ datastore_db | quote }} {{ db_user | quote }} {{ db_user | quote }} {{ datastore_user | quote }} -p postgres
-             chdir="{{ ckan_package_dir }}/ckan/ckanext/datastore/bin"
+  - name: Generate and run SQL to set Datastore permissions
+    script: >
+      {{ role_path }}/scripts/datastore_permissions.py {{ db_name | quote }} \
+              {{ datastore_db | quote }} {{ db_user | quote }} {{ db_user | quote }} \
+              {{ datastore_user | quote }} {{ ckan_package_dir }}/ckan \
+              | psql
+    become_user: postgres
     when: clone_ckan_source.changed
