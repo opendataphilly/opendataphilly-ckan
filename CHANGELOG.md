@@ -1,3 +1,3 @@
-## 2.8.1
+## 1.0.0
 
-* Upgrade OpenDataPhilly to CKAN 2.8.1.
+* Initial release.
