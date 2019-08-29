@@ -8,6 +8,8 @@ db_password: ckan_default
 datastore_user: datastore_default
 datastore_db: datastore_default
 db_host: database.service.opendataphilly.internal
+postgresql_version: "11"
+postgresql_package_version: "11*.pgdg14.04+1"
 postgresql_listen_addresses: "{{ db_host }}, localhost"
 postgresql_hba_mapping:
   - type: host

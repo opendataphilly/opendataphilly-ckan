@@ -80,7 +80,7 @@ Vagrant.configure(2) do |config|
     app.vm.network "private_network", ip: "192.168.8.85"
     app.vm.hostname = "app"
 
-    app.vm.synced_folder "../ckanext-odp_theme", "/vagrant_ckanext-odp_theme", nfs: true
+    app.vm.synced_folder "../ckanext-odp_theme", "/vagrant_ckanext-odp_theme"
 
     app.vm.provision :ansible do |ansible|
       ansible.playbook = "deployment/ansible/app.yml"
