@@ -4,9 +4,9 @@
   template: src=nginx_ckan_letsencrypt.j2
             dest=/etc/nginx/sites-available/ckan
             mode="0644"
-            
+
 - name: Restart Apache service
-  service: name=apache2 state=restarted            
+  service: name=apache2 state=restarted
 
 - name: Restart Nginx service
   service: name=nginx state=restarted
@@ -30,7 +30,7 @@
     name: "Renew Let's Encrypt Certificate"
     minute: 0
     hour: 23
-    day: 25
+    day: "1,15"
     job: "certbot-auto renew --quiet --no-self-upgrade && service nginx reload"
 
 - name: Copy Nginx Configuration
